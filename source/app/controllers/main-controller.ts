@@ -23,7 +23,7 @@ class MainController extends BaseController {
 
     constructor(userRepository?: Repository<User>) {
         super();
-        this.userRepo = userRepository || new Repository<User>('Users', User);
+        this.userRepo = userRepository || new Repository<User>(User);
     }
 
     initMiddleware() {

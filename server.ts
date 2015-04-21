@@ -43,9 +43,11 @@ app.use(express.static(path.join(__dirname, 'public')));
 // Controllers
 import BaseController = require('./source/common/web/base-controller');
 import MainController = require('./source/app/controllers/main-controller');
+import TechDebtController = require('./source/app/controllers/tech-debt-controller');
 
 var controllers: BaseController[] = [
-    new MainController()
+    new MainController(),
+    new TechDebtController()
 ];
 controllers.forEach(ctl => ctl.init(app));
 

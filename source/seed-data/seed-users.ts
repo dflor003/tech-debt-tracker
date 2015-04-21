@@ -8,7 +8,7 @@ import Promise = Q.Promise;
 
 function seed(): Promise<any> {
     var dfd = Q.defer<any>(),
-        userRepository = new Repository<User>('Users', User),
+        userRepository = new Repository<User>(User),
         users = [
             User.create({
                 username: 'BobB',

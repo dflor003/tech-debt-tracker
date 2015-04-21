@@ -13,7 +13,7 @@ module tetra.auth {
                         return $q.reject(SecurityHelper.NotAuthorized);
                     }
                 }
-            }
+            };
         }
     }
 }
