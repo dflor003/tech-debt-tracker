@@ -1,5 +1,5 @@
 {
-  "name": "Tech Debt Tracker",
+  "name": "TechDebtTracker",
   "version": "0.0.0",
   "private": true,
   "scripts": {
@@ -14,6 +14,8 @@
     "express-session": "^1.10.4",
     "jade": "~1.9.2",
     "less-middleware": "1.0.x",
+    "linq": "^3.0.4-beta",
+    "moment": "^2.10.2",
     "mongodb": "^2.0.27",
     "morgan": "~1.5.1",
     "passport": "^0.2.1",

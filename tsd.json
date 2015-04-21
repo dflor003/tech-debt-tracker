@@ -55,6 +55,12 @@
     },
     "toastr/toastr.d.ts": {
       "commit": "e57df787f4e11601625d7e1c1b2ee351b97a18a1"
+    },
+    "linq/linq.3.0.3-Beta4.d.ts": {
+      "commit": "cb08e83dd87ace1202d1032a8f275b3efacde5c3"
+    },
+    "moment/moment.d.ts": {
+      "commit": "cb08e83dd87ace1202d1032a8f275b3efacde5c3"
     }
   }
 }

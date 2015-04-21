@@ -1,4 +1,4 @@
-/// <reference path="../../../typings/tsd.d.ts" />
+/// <reference path="../../../typings/libs.d.ts" />
 
 import BaseController = require('../../common/web/base-controller');
 import routeHelper = require('../../common/web/route-helper');
@@ -56,7 +56,6 @@ class MainController extends BaseController {
             else {
                 req.login(user, err  => {
                     if (err) return next(err);
-                    console.log(user);
                     respond(user.toLoggedInUser());
                 });
             }

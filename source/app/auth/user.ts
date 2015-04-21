@@ -1,4 +1,4 @@
-/// <reference path="../../../typings/tsd.d.ts" />
+/// <reference path="../../../typings/libs.d.ts" />
 
 import Ensure = require('../../common/utils/ensure');
 import errors = require('../../common/utils/errors');
@@ -89,6 +89,10 @@ class User implements IEntity {
         return this.id;
     }
 
+    getUsername(): string {
+        return this.username;
+    }
+
     isMatchingPassword(password: string): boolean {
         return this.password.isMatchingPassword(password);
     }
@@ -112,10 +116,10 @@ class User implements IEntity {
     }
 
     toDocument(): Object {
-        return {
+        return <IUserDocument>{
             _id: User.transformId(this.id),
             username: this.username,
-            password: this.password.toDocument(),
+            password: <IPasswordDocument>this.password.toDocument(),
             firstName: this.firstName,
             lastName: this.lastName,
             roles: this.roles.map(role => Role[role].toUpperCase()),

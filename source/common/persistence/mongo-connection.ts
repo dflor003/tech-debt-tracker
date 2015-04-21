@@ -1,4 +1,4 @@
-/// <reference path="../../../typings/tsd.d.ts" />
+/// <reference path="../../../typings/libs.d.ts" />
 
 import mongodb = require('mongodb');
 import Q = require('q');

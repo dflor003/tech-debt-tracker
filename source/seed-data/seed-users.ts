@@ -1,9 +1,7 @@
 /// <reference path="../../typings/q/q.d.ts" />
 
 import Q = require('q');
-import MongoConnection = require('../common/persistence/mongo-connection');
 import Repository = require('../common/persistence/repository');
-import AuthHelper = require('../app/auth/auth-helper');
 import User = require('../app/auth/user');
 import Role = require('../app/auth/roles');
 import Promise = Q.Promise;
@@ -38,27 +36,16 @@ function seed(): Promise<any> {
             }),
         ];
 
-    MongoConnection.connect()
-        .then(db =>{
-            db
-                .clearDatabase()
-                .then(() => {
-                    // Create users
-                    userRepository.createAll(users)
-                        .then(results => {
-                            console.log(`Created ${users.length} test users`);
-                            dfd.resolve(results);
-                        })
-                        .fail(err => {
-                            console.error('Error seeding users');
-                            dfd.reject(err);
-                        });
-                })
-                .fail(dfd.reject);
+    userRepository.createAll(users)
+        .then(results => {
+            console.log(`Created ${users.length} test users`);
+            dfd.resolve(results);
         })
-        .catch(dfd.reject);
+        .fail(err => {
+            console.error('Error seeding users');
+            dfd.reject(err);
+        });
 
-    dfd.promise.finally(() => MongoConnection.disconnect());
     return dfd.promise;
 }
 

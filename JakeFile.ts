@@ -3,7 +3,7 @@
 
 import Q = require('q');
 import Promise = Q.Promise;
-import seed = require('./source/seed-data/seed-users');
+import seed = require('./source/seed-data/seed');
 
 /* Tasks */
 desc('Compiles All TypeScript Files');

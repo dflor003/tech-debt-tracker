@@ -1,4 +1,4 @@
-/// <reference path="./typings/tsd.d.ts" />
+/// <reference path="./typings/libs.d.ts" />
 /// <reference path="./typings/custom/serve-favicon.d.ts" />
 
 import express = require('express');

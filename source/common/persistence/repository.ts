@@ -18,7 +18,7 @@ class Repository<TModel extends IEntity> {
         this.transformIdFunc = type['transformId'] || (id => id);
 
         if (typeof this.fromDocumentFunc !== 'function') {
-            throw new Error('Repository type constructor is missing the fromDocument function');
+            throw new Error('Repsoitory type constructor is missing the fromDocument function');
         }
     }
 

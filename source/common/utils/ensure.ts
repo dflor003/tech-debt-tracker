@@ -1,4 +1,4 @@
-/// <reference path="../../../typings/tsd.d.ts" />
+/// <reference path="../../../typings/libs.d.ts" />
 
 import Utils = require('./utils');
 import errors = require('./errors');
@@ -6,7 +6,12 @@ import ValidationError = errors.ValidationError;
 
 class Ensure {
     static notNullOrEmpty(str: string, message: string, ...fmtArgs: any[]): string {
-        if(Utils.isNullOrUndefined(str) || !str.trim()) {
+        str = Ensure.notNull.apply(null, [str, message].concat(fmtArgs));
+        if (typeof str !== 'string') {
+            throw new ValidationError(`Expected string but got ${typeof str}. \nValue: \n${JSON.stringify(str, null, 4)}`);
+        }
+
+        if(!str.trim()) {
             throw new ValidationError(Utils.stringFormat(message, fmtArgs));
         }
 

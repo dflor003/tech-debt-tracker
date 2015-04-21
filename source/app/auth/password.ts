@@ -1,4 +1,4 @@
-/// <reference path="../../../typings/tsd.d.ts" />
+/// <reference path="../../../typings/libs.d.ts" />
 
 import errors = require('../../common/utils/errors');
 import IValueObject = require('../../common/persistence/value-object');
