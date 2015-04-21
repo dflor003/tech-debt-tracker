@@ -6,3 +6,33 @@
 // Font Awesome
 @import "../lib/components-font-awesome/less/font-awesome.less";
 @fa-font-path: "../lib/components-font-awesome/fonts";
+
+// Overrides
+@brand-primary: #5ca616;
+@brand-success: #346b00;
+@brand-info: #246baa;
+@brand-warning: #e68d00;
+@brand-danger: #d40200;
+
+@text-color: #515151;
+@link-color: #00aaf3;
+@ling-hover-color: #007db3;
+
+@font-family-sans-serif: "museo-slab", Arial, Helvetica, sans-serif;
+@font-family-base:        @font-family-sans-serif;
+
+.include-custom-font(@family: arial, @file: @family, @weight: normal, @style: normal){
+  @font-face{
+    font-family: @family;
+    src: url('/fonts/@{file}.otf') format("opentype");
+    font-weight: @weight;
+    font-style: @style;
+  }
+}
+
+.include-custom-font("museo-sans", "MuseoSans-300", 300);
+.include-custom-font("museo-sans", "MuseoSans-300Italic", 300, italic);
+.include-custom-font("museo-sans", "MuseoSans-500", 500);
+.include-custom-font("museo-sans", "MuseoSans-500Italic", 500, italic);
+.include-custom-font("museo-slab", "MuseoSlab-300", 300);
+.include-custom-font("museo-slab", "MuseoSlab-500", 500);

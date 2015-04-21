@@ -46,7 +46,7 @@ desc('Seeds test data');
 task('seed', [], () => {
     seed()
         .then(() => console.log('Seeding complete!'))
-        .catch(err => console.error(`Error occurred seeding: ${err}`))
+        .catch(err => console.error(`Error occurred seeding: ${err}\n${err.stack}`))
         .finally(() => complete());
 
 }, { async: true });

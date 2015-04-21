@@ -1,18 +1,23 @@
 /// <reference path="../../../typings/tsd.d.ts" />
 
 import Ensure = require('../../common/utils/ensure');
+import errors = require('../../common/utils/errors');
 import IEntity = require('../../common/persistence/entity');
+import Role = require('./roles');
 import password = require('./password');
 import mongodb = require('mongodb');
 import ObjectId = mongodb.ObjectID;
 import IPasswordDocument = password.IPasswordDocument;
 import Password = password.Password;
+import ValidationError = errors.ValidationError;
 
 interface IUserCreationInfo {
     username: string;
     password: string;
     firstName: string;
     lastName: string;
+    roles: Role[];
+    products: string[];
 }
 
 interface IUserDocument {
@@ -21,12 +26,15 @@ interface IUserDocument {
     password: IPasswordDocument;
     firstName: string;
     lastName: string;
+    roles?: string[];
+    products?: string[];
 }
 
 interface ILoggedInUser {
     id: string;
     firstName: string;
     lastName: string;
+    roles: Role[];
 }
 
 class User implements IEntity {
@@ -35,6 +43,8 @@ class User implements IEntity {
     private password: Password;
     private firstName: string;
     private lastName: string;
+    private roles: Role[] = [];
+    private products: string[] = [];
 
     constructor(
         username: string,
@@ -49,9 +59,18 @@ class User implements IEntity {
 
     static create(data: IUserCreationInfo): User {
         data = data || <any>{};
-        var password = Password.fromPassword(data.password);
+        var password = Password.fromPassword(data.password),
+            user = new User(data.username, password, data.firstName, data.lastName);
 
-        return new User(data.username, password, data.firstName, data.lastName);
+        if (data.roles) {
+            data.roles.forEach(role => user.addRole(role));
+        }
+
+        if (data.products) {
+            data.products.forEach(product => user.addProduct(product));
+        }
+
+        return user;
     }
 
     static fromDocument(doc: IUserDocument): User {
@@ -63,7 +82,7 @@ class User implements IEntity {
     }
 
     static transformId(id: string): ObjectId {
-        return ObjectId.createFromHexString(id);
+        return !id ? null : ObjectId.createFromHexString(id);
     }
 
     getId(): string {
@@ -74,13 +93,33 @@ class User implements IEntity {
         return this.password.isMatchingPassword(password);
     }
 
+    addRole(role: Role): void {
+        role = Ensure.notNull(role, 'Role is required');
+        if (this.roles.indexOf(role) !== -1) {
+            throw new ValidationError(`User '${this.username}' already has role '${Role[role]}'`);
+        }
+
+        this.roles.push(role);
+    }
+
+    addProduct(productCode: string): void {
+        productCode = Ensure.notNullOrEmpty(productCode, 'Product code required');
+        if (this.products.indexOf(productCode) !== -1) {
+            throw new ValidationError(`User '${this.username}' already has product '${productCode}'`);
+        }
+
+        this.products.push(productCode);
+    }
+
     toDocument(): Object {
         return {
-            _id: ObjectId.createFromHexString(this.id),
+            _id: User.transformId(this.id),
             username: this.username,
             password: this.password.toDocument(),
             firstName: this.firstName,
-            lastName: this.lastName
+            lastName: this.lastName,
+            roles: this.roles.map(role => Role[role].toUpperCase()),
+            products: this.products
         }
     }
 
@@ -88,7 +127,8 @@ class User implements IEntity {
         return {
             id: this.id,
             firstName: this.firstName,
-            lastName: this.lastName
+            lastName: this.lastName,
+            roles: this.roles
         }
     }
 }

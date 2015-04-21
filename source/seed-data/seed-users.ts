@@ -5,6 +5,7 @@ import MongoConnection = require('../common/persistence/mongo-connection');
 import Repository = require('../common/persistence/repository');
 import AuthHelper = require('../app/auth/auth-helper');
 import User = require('../app/auth/user');
+import Role = require('../app/auth/roles');
 import Promise = Q.Promise;
 
 function seed(): Promise<any> {
@@ -15,19 +16,25 @@ function seed(): Promise<any> {
                 username: 'BobB',
                 password: 'password',
                 firstName: 'Bob',
-                lastName: 'TheBuilder'
+                lastName: 'TheBuilder',
+                products: ['omg'],
+                roles: [Role.TeamMember]
             }),
             User.create({
                 username: 'JoeS',
                 password: 'password',
                 firstName: 'Joe',
-                lastName: 'Schmoe'
+                lastName: 'Schmoe',
+                products: ['omg'],
+                roles: [Role.TeamMember]
             }),
             User.create({
-                username: 'DaniLF',
+                username: 'DanilF',
                 password: 'password',
                 firstName: 'Danil',
-                lastName: 'Flores'
+                lastName: 'Flores',
+                products: ['omg'],
+                roles: [Role.TeamMember]
             }),
         ];
 
@@ -46,7 +53,8 @@ function seed(): Promise<any> {
                             console.error('Error seeding users');
                             dfd.reject(err);
                         });
-                }, dfd.reject);
+                })
+                .fail(dfd.reject);
         })
         .catch(dfd.reject);
 

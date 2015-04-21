@@ -15,6 +15,12 @@ module tetra {
                 .when('/dashboard', {
                     templateUrl: '/scripts/dashboard/dashboard.html',
                     controller: 'dashboardCtrl',
+                    controllerAs: 'ctrl',
+                    resolve: SecurityHelper.requiresLogin()
+                })
+                .when('/login', {
+                    templateUrl: '/scripts/auth/login.html',
+                    controller: 'loginCtrl',
                     controllerAs: 'ctrl'
                 })
                 .otherwise({ redirectTo: '/dashboard' })
