@@ -45,9 +45,29 @@ module tetra.common {
                 .catch(err => this.notifier.error(err, 'Error logging out'));
         }
 
-        isActive(area: string): boolean {
-            var path = this.$location.path();
-            return path.indexOf(`/${area}`) === 0;
+        isActive(path: string): boolean {
+            var activePath = this.$location.path(),
+                activeParts = activePath.split('/').filter(str => !!str),
+                pathParts = path.split('/').filter(str => !!str);
+
+            if (pathParts.length !== activeParts.length) {
+                return false;
+            }
+
+            for(var i = 0; i < activeParts.length; i++) {
+                var currentExpected = pathParts[i].toLowerCase(),
+                    currentActive = activeParts[i].toLowerCase();
+
+                if (currentExpected === '*') {
+                    continue;
+                }
+
+                if (currentExpected !== currentActive) {
+                    return false;
+                }
+            }
+
+            return true;
         }
     }
 

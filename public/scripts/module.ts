@@ -24,6 +24,12 @@ module tetra {
                     controllerAs: 'ctrl',
                     resolve: SecurityHelper.requiresLogin()
                 })
+                .when('/techdebt/:project/new', {
+                    templateUrl: '/scripts/tech-debt/create-tech-debt.html',
+                    controller: 'createTechDebtCtrl',
+                    controllerAs: 'ctrl',
+                    resolve: SecurityHelper.requiresLogin()
+                })
                 .when('/login', {
                     templateUrl: '/scripts/auth/login.html',
                     controller: 'loginCtrl',

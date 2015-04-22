@@ -24,11 +24,15 @@ html
 
                 div#main-navigation.collapse.navbar-collapse
                     ul.nav.navbar-nav
-                        li(ng-class='{ active: root.isActive("dashboard") }')
+                        li(ng-class='{ active: root.isActive("dashboard/*") }')
                             a(href='#/dashboard') Dashboard
-                        li(ng-class='{ active: root.isActive("techdebt"), disabled: !root.currentProject }')
-                            a(href='#/techdebt/{{root.currentProject.toLowerCase()}}',ng-if="root.currentProject") Browse
+                        li(ng-class='{ active: root.isActive("techdebt/*"), disabled: !root.currentProject }')
+                            a(href='#/techdebt/{{root.currentProject | lowercase}}',ng-if='root.currentProject') Browse
                             a(href='javascript:void(0)',tooltip='No project selected',ng-if='!root.currentProject',tooltip-placement="bottom") Browse
+                        li(ng-class='{ active: root.isActive("techdebt/*/new") }',ng-if='root.currentProject')
+                            a(href='#/techdebt/{{root.currentProject | lowercase}}/new')
+                                i.fa.fa-plus.fa-lg
+                                |  Add Tech Debt
                     ul.nav.navbar-nav.navbar-right(ng-if='root.isLoggedIn')
                         li(ng-if='root.currentProject && !root.currentUser.isMultiProject')
                             a(href='javascript:void(0)') {{root.currentProject | uppercase}}
