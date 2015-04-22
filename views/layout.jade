@@ -31,7 +31,7 @@ html
                             a(href='javascript:void(0)',tooltip='No project selected',ng-if='!root.currentProject',tooltip-placement="bottom") Browse
                         li(ng-class='{ active: root.isActive("techdebt/*/new") }',ng-if='root.currentProject')
                             a(href='#/techdebt/{{root.currentProject | lowercase}}/new')
-                                i.fa.fa-plus.fa-lg
+                                i.fa.fa-plus-circle.fa-2x.pull-left.toolbar-add
                                 |  Add Tech Debt
                     ul.nav.navbar-nav.navbar-right(ng-if='root.isLoggedIn')
                         li(ng-if='root.currentProject && !root.currentUser.isMultiProject')

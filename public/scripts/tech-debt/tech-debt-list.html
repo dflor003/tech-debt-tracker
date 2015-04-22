@@ -13,7 +13,7 @@
 </form>
 
 <div class="list-group">
-    <a href="#/techdebt/{{ctrl.productCode.toUpperCase()}}/{{item.id}}" class="list-group-item" ng-repeat="item in ctrl.items">
+    <a href="#/techdebt/{{ctrl.projectCode.toUpperCase()}}/{{item.id}}" class="list-group-item" ng-repeat="item in ctrl.items">
         <span class="badge">Cost: {{item.cost.format('$0,0.00')}}</span>
         <span class="badge">Lag: {{item.totalSlowdown.humanize()}}</span>
         <h4 class="list-group-item-heading">

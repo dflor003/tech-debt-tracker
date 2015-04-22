@@ -1,4 +1,65 @@
-<h3>New Technical Debt Item</h3>
-<p>
-    Create a new technical debt item.
-</p>
+<form name="createTechDebt" ng-submit="ctrl.save(createTechDebt)">
+    <fieldset>
+        <legend class="h3">New Technical Debt Item</legend>
+
+        <p>
+            Create a new technical debt item.
+        </p>
+        <alert type="danger" ng-if="ctrl.log.hasErrors">
+            <ul class="list-unstyled">
+                <li ng-repeat="msg in ctrl.log.messages | filter:{ type: 0 }">{{msg.message}}</li>
+            </ul>
+        </alert>
+
+        <div class="form-group">
+            <label for="name">Title</label>
+            <input type="text" id="name" name="name" class="form-control" ng-model="ctrl.model.name"
+                   placeholder="i.e. This thing isn't ideal" required/>
+            <p class="help-block">The title of this technical debt item.</p>
+        </div>
+
+        <div class="form-group">
+            <label for="description">Description</label>
+            <textarea id="description" name="description" cols="30" rows="6" class="form-control"
+                      ng-model="ctrl.model.description"
+                      placeholder="i.e. Because of this one part of the system, this other thing is a pain."
+                      required>
+            </textarea>
+            <p class="help-block">An overall description of what the underlying problem is</p>
+        </div>
+
+        <div class="form-group">
+            <label for="jira">Jira Number</label>
+            <input type="text" id="jira" name="jira" class="form-control" ng-model="ctrl.model.jira"
+                   ng-pattern="/[A-Za-z]+[-][0-9]+/" placeholder="i.e. ULTI-8675309"
+                   required />
+            <p class="help-block">The Jira number for the issue you are reporting this technical debt for.</p>
+        </div>
+
+        <div class="form-group">
+            <label for="duration">Duration</label>
+            <select id="duration" name="duration" class="form-control"
+                    ng-options="item.amount as item.label for item in ctrl.slowdowns" ng-model="ctrl.model.amount"
+                    required placeholder="Select a duration...">
+            </select>
+            <p class="help-block">About how long did this slow you down?</p>
+        </div>
+
+        <div class="form-group">
+            <label for="reason">Specific reason</label>
+            <textarea name="reason" id="reason" cols="30" rows="6" class="form-control" ng-model="ctrl.model.reason"
+                      required placeholder="i.e. In ULTI-12345 it slowed me down because...">
+            </textarea>
+            <p class="help-block">In the specific Jira you were working on, why did this cause you such pain?</p>
+        </div>
+        <div class="form-group">
+            <button class="btn btn-primary" type="submit">
+                <i class="fa fa-lg fa-save"></i> Save
+            </button>
+            <button class="btn btn-default" type="button" ng-click="ctrl.cancel()">
+                <i class="fa fa-lg fa-long-arrow-left"></i> Cancel
+            </button>
+        </div>
+    </fieldset>
+</form>
+

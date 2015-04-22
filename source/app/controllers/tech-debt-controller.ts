@@ -7,7 +7,9 @@ import HttpStatusCode = require('../../common/web/http-status-code');
 import Repository = require('../../common/persistence/repository');
 import TechDebtItem = require('../debt/tech-debt-item');
 import TechnicalImpediment = require('../debt/tech-impediment');
+import JiraNumber = require('../debt/jira-number');
 import ITechDebtDocument = require('../debt/i-tech-debt-document');
+import User = require('../auth/user');
 import Project = require('../projects/project');
 import ProjectRepository = require('../projects/project-repository');
 import express = require('express');
@@ -34,7 +36,8 @@ class TechDebtController extends BaseController {
 
     initRoutes(router: IRouteHelper): void {
         router
-            .get('/:project/techdebt', this.getTechDebtList);
+            .get('/:project/techdebt', this.getTechDebtList)
+            .post('/:project/techdebt', this.addTechDebtItem);
     }
 
     getTechDebtList(params: IRouteParams, respond: IRouteCallback): void {
@@ -44,7 +47,7 @@ class TechDebtController extends BaseController {
 
         this.projectRepository.getProjectDevCost(projectCode)
             .then(cost => this.techDeptRepository
-                .findAll({ productCode: projectCode })
+                .findAll({ projectCode: projectCode })
                 .select({
                     include: ['name', 'description', 'updatedAt', 'impediments'],
                     select: (doc: ITechDebtDocument) => {
@@ -70,6 +73,31 @@ class TechDebtController extends BaseController {
                 .orderByDescending('updatedAt')
                 .execute()
                 .then(items => respond(items)))
+            .catch(err => respond(HttpStatusCode.BadRequest, { message: 'An error occurred', error: err.toString() }));
+    }
+
+    addTechDebtItem(params: IRouteParams, respond: IRouteCallback, req: Request): void {
+        var projectCode = Ensure.notNullOrEmpty(params.string('project'), 'No project code specified').toUpperCase(),
+            user: User = Ensure.notNull(req.user, 'Not logged in'),
+            data: any = Ensure.notNull(params.body(), 'No data passed'),
+            impediment = Ensure.notNull(data.impediment, 'No impediment details passed');
+
+        var item = TechDebtItem.create({
+            projectCode: projectCode,
+            name: data.name,
+            description: data.description,
+            impediment: TechnicalImpediment.create({
+                reportedBy: user.getId(),
+                jira: new JiraNumber(data.impediment.jira),
+                amount: moment.duration(data.impediment.amount),
+                reason: data.impediment.reason
+            })
+        });
+        this.techDeptRepository
+            .create(item)
+            .then(result => {
+                respond(result);
+            })
             .catch(err => respond(HttpStatusCode.BadRequest, { message: 'An error occurred', error: err.toString() }));
     }
 }

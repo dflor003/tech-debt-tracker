@@ -22,7 +22,7 @@ function seed(): Promise<any> {
                 user2Id = usersByUsername['BobB'],
                 user3Id = usersByUsername['JoeS'],
                 item1 = TechDebtItem.create({
-                    productCode: 'omg',
+                    projectCode: 'omg',
                     name: 'Our ids are ints and not GUIDs',
                     description: 'Right now our ids are ints instead of guids. This is causing issues since it becomes a nightmare to maintain and we have to jump through all these hoops to get ids sequential.',
                     createdAt: moment('11-03-2014', 'MM-DD-YYYY'),
@@ -34,7 +34,7 @@ function seed(): Promise<any> {
                     })
                 }),
                 item2 = TechDebtItem.create({
-                    productCode: 'omg',
+                    projectCode: 'omg',
                     name: 'Sporadically failing tests',
                     description: 'These two or three tests keep failing in the build and/or locally during rake.',
                     createdAt: moment('12-14-2014', 'MM-DD-YYYY'),

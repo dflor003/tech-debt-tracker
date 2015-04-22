@@ -8,7 +8,7 @@ interface ITechDebtDocument {
     _id: ObjectId;
     createdAt: Date;
     updatedAt: Date;
-    productCode: string;
+    projectCode: string;
     reportedBy: ObjectId;
     name: string;
     description: string;

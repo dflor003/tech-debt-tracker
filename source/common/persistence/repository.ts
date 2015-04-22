@@ -105,15 +105,18 @@ class Repository<TModel extends IEntity> {
         }
     }
 
-    create(model: TModel): Promise<TModel[]> {
-        var dfd = Q.defer<TModel[]>(),
+    create(model: TModel): Promise<TModel> {
+        var dfd = Q.defer<TModel>(),
             document = Repository.toDocument(model);
 
         this.getCollection()
             .then(collection => {
                 collection.insert(document, (err, result) => {
                     if (err) dfd.reject(err);
-                    else dfd.resolve(result);
+                    else {
+                        var inserted = result.ops[0];
+                        dfd.resolve(this.createInstance(inserted));
+                    }
                 });
             })
             .fail(err => dfd.reject(err));

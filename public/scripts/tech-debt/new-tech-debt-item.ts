@@ -15,11 +15,11 @@ module tetra.techdebt {
         reason: string;
 
         constructor() {
-            this.name = '';
-            this.description = '';
-            this.jira = '';
-            this.amount = moment.duration();
-            this.reason = '';
+            this.name = null;
+            this.description = null;
+            this.jira = null;
+            this.amount = null;
+            this.reason = null;
         }
 
         toData(): Object {

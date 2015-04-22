@@ -15,7 +15,7 @@ import ObjectId = mongodb.ObjectID;
 import Moment = moment.Moment;
 
 interface ITechDebtCreationData {
-    productCode: string;
+    projectCode: string;
     name: string;
     description: string;
     impediment: TechnicalImpediment;
@@ -29,12 +29,12 @@ class TechDebtItem implements IEntity {
     private reportedBy: string;
     private name: string;
     private description: string;
-    private productCode: string;
+    private projectCode: string;
     private associatedJiras: JiraNumber[] = [];
     private impediments: TechnicalImpediment[] = [];
 
-    constructor(productCode: string, name: string, description: string, reportedBy: string, createdAt?: Moment) {
-        this.productCode = Ensure.notNullOrEmpty(productCode, 'Tech debt item must have a product code').toUpperCase();
+    constructor(projectCode: string, name: string, description: string, reportedBy: string, createdAt?: Moment) {
+        this.projectCode = Ensure.notNullOrEmpty(projectCode, 'Tech debt item must have a project code').toUpperCase();
         this.name = Ensure.notNullOrEmpty(name, 'Tech debt item name is required');
         this.description = Ensure.notNullOrEmpty(description, 'Tech debt item description is required');
         this.createdAt = createdAt || moment();
@@ -48,7 +48,7 @@ class TechDebtItem implements IEntity {
         }
 
         var reporter = data.impediment.getReporterId(),
-            item = new TechDebtItem(data.productCode, data.name, data.description, reporter, data.createdAt);
+            item = new TechDebtItem(data.projectCode, data.name, data.description, reporter, data.createdAt);
 
         item.impediments.push(data.impediment);
 
@@ -59,7 +59,7 @@ class TechDebtItem implements IEntity {
         var id = document._id.toHexString(),
             createdAt = moment(document.createdAt),
             updatedAt = moment(document.updatedAt),
-            item = new TechDebtItem(document.productCode, document.name, document.description, document.reportedBy.toHexString());
+            item = new TechDebtItem(document.projectCode, document.name, document.description, document.reportedBy.toHexString());
 
         item.id = id;
         item.createdAt = createdAt;
@@ -97,7 +97,7 @@ class TechDebtItem implements IEntity {
             _id: TechDebtItem.transformId(this.id),
             createdAt: new Date(this.createdAt.toISOString()),
             updatedAt: new Date(this.updateAt.toISOString()),
-            productCode: this.productCode,
+            projectCode: this.projectCode,
             reportedBy: ObjectId.createFromHexString(this.reportedBy),
             name: this.name,
             description: this.description,
