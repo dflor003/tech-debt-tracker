@@ -82,5 +82,6 @@ crashlytics-build.properties
 /public/**/*.css
 /typings/**/*.d.ts
 !/typings/tsd.d.ts
+!/typings/libs.d.ts
 !/typings/custom/*.d.ts
 /public/lib
