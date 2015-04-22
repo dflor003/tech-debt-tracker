@@ -16,7 +16,7 @@ function seed(): Promise<any> {
                 password: 'password',
                 firstName: 'Bob',
                 lastName: 'TheBuilder',
-                products: ['omg'],
+                projects: ['omg'],
                 roles: [Role.TeamMember]
             }),
             User.create({
@@ -24,7 +24,7 @@ function seed(): Promise<any> {
                 password: 'password',
                 firstName: 'Joe',
                 lastName: 'Schmoe',
-                products: ['omg'],
+                projects: ['omg'],
                 roles: [Role.TeamMember]
             }),
             User.create({
@@ -32,9 +32,17 @@ function seed(): Promise<any> {
                 password: 'password',
                 firstName: 'Danil',
                 lastName: 'Flores',
-                products: ['omg'],
+                projects: ['omg'],
                 roles: [Role.TeamMember]
             }),
+            User.create({
+                username: 'ErnestoD',
+                password: 'password',
+                firstName: 'Ernesto',
+                lastName: 'Diaz',
+                projects: ['omg', 'onb', 'rec'],
+                roles: [Role.Manager]
+            })
         ];
 
     userRepository.createAll(users)

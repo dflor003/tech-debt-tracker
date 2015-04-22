@@ -1,5 +1,6 @@
 enum Role {
-    TeamMember
+    TeamMember,
+    Manager
 }
 
 export = Role;

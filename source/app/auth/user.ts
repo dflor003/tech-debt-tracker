@@ -17,7 +17,7 @@ interface IUserCreationInfo {
     firstName: string;
     lastName: string;
     roles: Role[];
-    products: string[];
+    projects: string[];
 }
 
 interface IUserDocument {
@@ -27,7 +27,7 @@ interface IUserDocument {
     firstName: string;
     lastName: string;
     roles?: string[];
-    products?: string[];
+    projects?: string[];
 }
 
 interface ILoggedInUser {
@@ -44,7 +44,7 @@ class User implements IEntity {
     private firstName: string;
     private lastName: string;
     private roles: Role[] = [];
-    private products: string[] = [];
+    private projects: string[] = [];
 
     constructor(
         username: string,
@@ -66,8 +66,8 @@ class User implements IEntity {
             data.roles.forEach(role => user.addRole(role));
         }
 
-        if (data.products) {
-            data.products.forEach(product => user.addProduct(product));
+        if (data.projects) {
+            data.projects.forEach(product => user.addProject(product));
         }
 
         return user;
@@ -79,7 +79,7 @@ class User implements IEntity {
 
         user.id = doc._id.toHexString();
         user.roles = doc.roles.map(role => Role[role]);
-        user.products = doc.products.map(prod => prod);
+        user.projects = doc.projects.map(prod => prod);
         return user;
     }
 
@@ -108,13 +108,13 @@ class User implements IEntity {
         this.roles.push(role);
     }
 
-    addProduct(productCode: string): void {
-        productCode = Ensure.notNullOrEmpty(productCode, 'Product code required');
-        if (this.products.indexOf(productCode) !== -1) {
+    addProject(productCode: string): void {
+        productCode = Ensure.notNullOrEmpty(productCode, 'Product code required').toUpperCase();
+        if (this.projects.indexOf(productCode) !== -1) {
             throw new ValidationError(`User '${this.username}' already has product '${productCode}'`);
         }
 
-        this.products.push(productCode);
+        this.projects.push(productCode);
     }
 
     toDocument(): Object {
@@ -125,7 +125,7 @@ class User implements IEntity {
             firstName: this.firstName,
             lastName: this.lastName,
             roles: this.roles.map(role => Role[role]),
-            products: this.products
+            projects: this.projects
         }
     }
 
@@ -135,7 +135,7 @@ class User implements IEntity {
             firstName: this.firstName,
             lastName: this.lastName,
             roles: this.roles,
-            products: this.products
+            projects: this.projects
         }
     }
 }

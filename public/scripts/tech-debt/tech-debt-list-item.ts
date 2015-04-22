@@ -1,6 +1,6 @@
 /// <reference path="../libs.d.ts" />
 
-module tetra.browse {
+module tetra.techdebt {
     import Moment = moment.Moment;
     import Duration = moment.Duration;
 

@@ -35,9 +35,9 @@ module tetra.auth {
                 .then(user => {
                     this.notifier.success('Logged in successfully!');
 
-                    var productCode = Enumerable.from(user.products).first();
+                    var productCode = Enumerable.from(user.projects).first();
 
-                    this.$location.path(`/techdebt/${productCode}`);
+                    this.$location.path(`/dashboard/${productCode.toLowerCase()}`);
                 })
                 .catch(message => this.notifier.error(message, 'Could not log in'));
         }

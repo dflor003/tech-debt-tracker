@@ -28,6 +28,14 @@ module tetra.common {
             return this.sessionService.currentUser;
         }
 
+        get currentProject(): string {
+            return this.sessionService.selectedProjectCode;
+        }
+
+        changeProject(projectCode: string): void {
+            this.sessionService.setCurrentProject(projectCode);
+        }
+
         logout(): void {
             this.sessionService.logoutUser()
                 .then(() => {

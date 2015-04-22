@@ -18,8 +18,8 @@ module tetra {
                     controllerAs: 'ctrl',
                     resolve: SecurityHelper.requiresLogin()
                 })
-                .when('/techdebt/:product', {
-                    templateUrl: '/scripts/browse/browse.html',
+                .when('/techdebt/:project', {
+                    templateUrl: '/scripts/tech-debt/tech-debt-list.html',
                     controller: 'techDebtListCtrl',
                     controllerAs: 'ctrl',
                     resolve: SecurityHelper.requiresLogin()

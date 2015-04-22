@@ -26,7 +26,17 @@ html
                     ul.nav.navbar-nav
                         li(ng-class='{ active: root.isActive("dashboard") }')
                             a(href='#/dashboard') Dashboard
+                        li(ng-class='{ active: root.isActive("techdebt"), disabled: !root.currentProject }')
+                            a(href='#/techdebt/{{root.currentProject.toLowerCase()}}',ng-if="root.currentProject") Browse
+                            a(href='javascript:void(0)',tooltip='No project selected',ng-if='!root.currentProject',tooltip-placement="bottom") Browse
                     ul.nav.navbar-nav.navbar-right(ng-if='root.isLoggedIn')
+                        li(ng-if='root.currentProject && !root.currentUser.isMultiProject')
+                            a(href='javascript:void(0)') {{root.currentProject | uppercase}}
+                        li.dropdown(ng-if='root.currentProject && root.currentUser.isMultiProject',dropdown)
+                            a.dropdown-toggle(href='javascript:void(0)',dropdown-toggle,role='button',aria-expanded='false') {{root.currentProject | uppercase}}
+                            ul.dropdown-menu(role='menu')
+                                li(ng-repeat='project in root.currentUser.projects')
+                                    a(href='javascript:void(0)',ng-click='root.changeProject(project)') {{project}}
                         li.dropdown(dropdown)
                             a.dropdown-toggle(href='javascript:void(0)',dropdown-toggle,role='button',aria-expanded='false') {{root.currentUser.firstName}} {{root.currentUser.lastName}}
                             ul.dropdown-menu(role='menu')

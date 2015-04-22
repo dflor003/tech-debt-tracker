@@ -6,7 +6,6 @@ module tetra.services {
         code: string;
         name: string;
         description: string;
-        devHourlyCost: number;
     }
 
     export class ProjectService {
@@ -18,7 +17,7 @@ module tetra.services {
             this.$q = $q;
         }
 
-        getProjectByCode(projectCode: string): ng.IHttpPromise<IProjectSummaryData[]> {
+        getProjectByCode(projectCode: string): ng.IHttpPromise<IProjectSummaryData> {
             return this.$http.get(`/api/projects/${projectCode}`);
         }
     }
