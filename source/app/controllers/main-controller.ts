@@ -40,9 +40,12 @@ class MainController extends BaseController {
     }
 
     home(params: IRouteParams, respond: IViewCallback, req: Request): void {
-        console.log(req.user);
+        var currentUser: User = req.user;
+
         respond('layout', {
-            currentUser: req.user
+            currentUser: !currentUser
+                ? null
+                : currentUser.toLoggedInUser()
         });
     }
 
@@ -70,7 +73,7 @@ class MainController extends BaseController {
     }
 
     authenticate(username, password, done: (err: any, result: any, message?: any) => void): void {
-        var user = this.userRepo
+        this.userRepo
             .findOne({ username: new RegExp(username, 'i') })
             .then((user: User) => {
                 if (!user) {

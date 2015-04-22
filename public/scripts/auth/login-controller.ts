@@ -29,9 +29,11 @@ module tetra.auth {
                 password = this.model.password;
 
             this.identityService.loginUser(username, password)
-                .then(() => {
+                .then(user => {
                     this.notifier.success('Logged in successfully!');
-                    this.$location.path('/dashboard');
+
+                    var productCode = Enumerable.from(user.products).first();
+                    this.$location.path(`/techdebt/${productCode}`);
                 })
                 .catch(message => this.notifier.error(message, 'Could not log in'));
         }

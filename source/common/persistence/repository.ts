@@ -8,23 +8,31 @@ import CollectionFindOptions = mongodb.CollectionFindOptions;
 import Promise = Q.Promise;
 import Collection = mongodb.Collection;
 
-//class ProjectionBuilder<TResult> extends FindBuilder<TResult> {
-//    constructor(callback: (opts: CollectionFindOptions) => Promise<TResult[]>) {
-//        super(callback);
-//    }
-//}
+interface IProjection<TModel, TProjection> {
+    include?: string[];
+    exclude?: string[];
+    select: (model: any) => TProjection;
+}
 
 class FindBuilder<TModel> {
     private options: CollectionFindOptions;
-    private callback: (opts: CollectionFindOptions) => Promise<TModel[]>;
+    private callback: (opts: CollectionFindOptions, hasProjection: boolean) => Promise<TModel[]>;
+    private projection: (model: any) => any;
 
-    constructor(callback: (opts: CollectionFindOptions) => Promise<TModel[]>) {
+    constructor(callback: (opts: CollectionFindOptions, hasProjection: boolean) => Promise<TModel[]>) {
         this.callback = callback;
         this.options = {};
     }
 
-    select(...fields: string[]): FindBuilder<TModel> {
-        return this.addProjection(fields, true);
+    select<TProjection>(project: IProjection<TModel, TProjection>): FindBuilder<TProjection> {
+        this.addProjection(project.include || [], true);
+        this.addProjection(project.exclude || [], false);
+
+        var result = new FindBuilder<TProjection>(<any>this.callback);
+        result.options = this.options;
+        result.projection = project.select;
+
+        return result;
     }
 
     skip(count: number): FindBuilder<TModel> {
@@ -46,7 +54,19 @@ class FindBuilder<TModel> {
     }
 
     execute(): Promise<TModel[]> {
-        return this.callback(this.options);
+        if (!this.projection) {
+            return this.callback(this.options, false);
+        }
+
+        var dfd = Q.defer<TModel[]>();
+        this.callback(this.options, true)
+            .then((results: any[]) => {
+                var transformed = results.map(result => this.projection(result));
+                dfd.resolve(transformed);
+            })
+            .fail(dfd.reject);
+
+        return dfd.promise;
     }
 
     private addProjection(fields: string[], include: boolean): FindBuilder<TModel> {
@@ -145,7 +165,7 @@ class Repository<TModel extends IEntity> {
     }
 
     findAll(query: Object): FindBuilder<TModel> {
-        return new FindBuilder((opts: CollectionFindOptions) => {
+        return new FindBuilder((opts: CollectionFindOptions, hasProjection: boolean) => {
             var dfd = Q.defer<TModel[]>();
 
             this.getCollection()
@@ -153,6 +173,9 @@ class Repository<TModel extends IEntity> {
                     .find(query, opts)
                     .toArray((err, documents) => {
                         if (err) dfd.reject(err);
+                        else if (hasProjection) {
+                            dfd.resolve(documents);
+                        }
                         else {
                             var results = documents.map(doc => this.createInstance(doc));
                             dfd.resolve(results);

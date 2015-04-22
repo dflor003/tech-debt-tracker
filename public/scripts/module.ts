@@ -12,9 +12,15 @@ module tetra {
     app
         .config(($routeProvider: IRouteProvider) => {
             $routeProvider
-                .when('/dashboard', {
+                .when('/dashboard/:product', {
                     templateUrl: '/scripts/dashboard/dashboard.html',
                     controller: 'dashboardCtrl',
+                    controllerAs: 'ctrl',
+                    resolve: SecurityHelper.requiresLogin()
+                })
+                .when('/techdebt/:product', {
+                    templateUrl: '/scripts/browse/browse.html',
+                    controller: 'techDebtListCtrl',
                     controllerAs: 'ctrl',
                     resolve: SecurityHelper.requiresLogin()
                 })
@@ -23,7 +29,7 @@ module tetra {
                     controller: 'loginCtrl',
                     controllerAs: 'ctrl'
                 })
-                .otherwise({ redirectTo: '/dashboard' })
+                .otherwise({ redirectTo: '/dashboard/omg' })
         })
         .run(($rootScope: ng.IRootScopeService, $location: ng.ILocationService) => {
             $rootScope.$on('$routeChangeError', (evt, current, prev, rejection) => {

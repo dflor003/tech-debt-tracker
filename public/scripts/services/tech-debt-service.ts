@@ -6,6 +6,7 @@ module tetra.services {
         id: string;
         name: string;
         description: string;
+        updatedAt: string;
     }
 
     export class TechDebtService {
@@ -17,7 +18,7 @@ module tetra.services {
             this.$q = $q;
         }
 
-        getTechDebtList(product: string, pageNum: number, pageSize: number): ng.IHttpPromise<ITechDebtListItemData> {
+        getTechDebtList(product: string, pageNum: number, pageSize: number): ng.IHttpPromise<ITechDebtListItemData[]> {
             return this.$http.get(`/api/${product}/techdebt/?page=${pageNum}&per_page=${pageSize}`);
         }
     }

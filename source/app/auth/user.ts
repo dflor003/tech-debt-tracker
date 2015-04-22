@@ -78,6 +78,8 @@ class User implements IEntity {
             user = new User(doc.username, password, doc.firstName, doc.lastName);
 
         user.id = doc._id.toHexString();
+        user.roles = doc.roles.map(role => Role[role]);
+        user.products = doc.products.map(prod => prod);
         return user;
     }
 
@@ -122,7 +124,7 @@ class User implements IEntity {
             password: <IPasswordDocument>this.password.toDocument(),
             firstName: this.firstName,
             lastName: this.lastName,
-            roles: this.roles.map(role => Role[role].toUpperCase()),
+            roles: this.roles.map(role => Role[role]),
             products: this.products
         }
     }
@@ -132,7 +134,8 @@ class User implements IEntity {
             id: this.id,
             firstName: this.firstName,
             lastName: this.lastName,
-            roles: this.roles
+            roles: this.roles,
+            products: this.products
         }
     }
 }

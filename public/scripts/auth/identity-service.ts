@@ -9,17 +9,23 @@ module tetra.auth {
         id: string;
         firstName: string;
         lastName: string;
+        products: string[];
+        roles: string[];
     }
 
     export class LoggedInUser  {
         id: string;
         firstName: string;
         lastName: string;
+        products: string[];
+        roles: string[];
 
         constructor(data: ILoggedInUserData) {
             this.id = data.id;
             this.firstName = data.firstName;
             this.lastName = data.lastName;
+            this.products = data.products || [];
+            this.roles = data.roles || [];
         }
     }
 

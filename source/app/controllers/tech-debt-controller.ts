@@ -8,6 +8,7 @@ import Repository = require('../../common/persistence/repository');
 import TechDebtItem = require('../debt/tech-debt-item');
 import techImpediment = require('../debt/tech-impediment');
 import express = require('express');
+import moment = require('moment');
 
 import TechnicalImpediment = techImpediment.TechnicalImpediment;
 import Express = express.Express;
@@ -22,7 +23,7 @@ class TechDebtController extends BaseController {
     private repository: Repository<TechDebtItem>;
 
     constructor() {
-        super('/api')
+        super('/api');
         this.repository = new Repository<TechDebtItem>(TechDebtItem);
     }
 
@@ -38,10 +39,20 @@ class TechDebtController extends BaseController {
 
         this.repository
             .findAll({ productCode: product })
-            //.select('name', 'description')
+            .select({
+                include: ['name', 'description', 'updatedAt'],
+                select: doc => {
+                    return {
+                        id: doc._id.toHexString(),
+                        name: doc.name,
+                        description: doc.description,
+                        updatedAt: moment(doc.updatedAt).toISOString()
+                    };
+                }
+            })
             .skip(page)
             .take(pageSize)
-            .orderBy('name')
+            .orderByDescending('updatedAt')
             .execute()
             .then(items => respond(items))
             .fail(err => respond(HttpStatusCode.BadRequest, { message: 'An error occurred', error: err.toString() }));

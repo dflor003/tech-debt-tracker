@@ -1,4 +1,3 @@
-
 interface IValueObject {
     toDocument(): Object;
 }
