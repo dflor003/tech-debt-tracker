@@ -1,5 +1,5 @@
 /// <reference path="../libs.d.ts" />
-/// <reference path="identity-service.ts" />
+/// <reference path="session-service.ts" />
 
 module tetra.auth {
 

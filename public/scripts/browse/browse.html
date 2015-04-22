@@ -1,6 +1,19 @@
 <h3>Browse Technical Debt - {{ctrl.productCode.toUpperCase()}}</h3>
+<p>
+    Browse through technical debt, filter, and search.
+</p>
+
+<form class="row">
+    <div class="form-group col-md-6">
+        <label for="search" class="sr-only">Search</label>
+        <input type="search" id="search" class="form-control" placeholder="Search..."/>
+    </div>
+</form>
+
 <div class="list-group">
     <a href="#/techdebt/{{ctrl.productCode.toUpperCase()}}/{{item.id}}" class="list-group-item" ng-repeat="item in ctrl.items">
+        <span class="badge">Cost: {{item.cost.format('$0,0.00')}}</span>
+        <span class="badge">Lag: {{item.totalSlowdown.humanize()}}</span>
         <h4 class="list-group-item-heading">
             {{item.name}}
             <small>{{item.updatedAt.fromNow()}}</small>

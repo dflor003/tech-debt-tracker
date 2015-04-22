@@ -1,6 +1,7 @@
 /// <reference path="../../typings/q/q.d.ts" />
 
 import Q = require('q');
+import Enumerable = require('linq');
 import Repository = require('../common/persistence/repository');
 import User = require('../app/auth/user');
 import Role = require('../app/auth/roles');
@@ -38,7 +39,8 @@ function seed(): Promise<any> {
 
     userRepository.createAll(users)
         .then(results => {
-            console.log(`Created ${users.length} test users`);
+            var names = Enumerable.from(users).select(user => user.getUsername()).toArray();
+            console.log(`Created ${users.length} test users: [ ${names.join(', ')} ]`);
             dfd.resolve(results);
         })
         .fail(err => {

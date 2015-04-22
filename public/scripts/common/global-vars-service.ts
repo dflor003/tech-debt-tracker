@@ -1,4 +1,4 @@
-/// <reference path="../auth/identity-service.ts" />
+/// <reference path="../auth/session-service.ts" />
 
 module tetra.common {
     import ILoggedInUserData = tetra.auth.ILoggedInUserData;

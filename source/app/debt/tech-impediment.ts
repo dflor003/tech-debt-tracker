@@ -5,31 +5,12 @@ import Ensure = require('../../common/utils/ensure');
 import errors = require('../../common/utils/errors');
 import IValueObject = require('../../common/persistence/value-object');
 import JiraNumber = require('./jira-number');
+import ITechnicalImpedimentDocument = require('./i-tech-impediment-document');
 import Moment = moment.Moment;
 import Duration = moment.Duration;
 import ObjectId = mongodb.ObjectID;
 
-export class SlowdownAmount {
-    private static workDayHours = 8;
-
-    static small(): Duration {
-        return moment.duration(SlowdownAmount.workDayHours / 2, 'hours');
-    }
-
-    static medium(): Duration {
-        return moment.duration(SlowdownAmount.workDayHours, 'hours');
-    }
-
-    static large(): Duration {
-        return moment.duration(SlowdownAmount.workDayHours * 2, 'hours');
-    }
-
-    static extraLarge(): Duration {
-        return moment.duration(SlowdownAmount.workDayHours * 5, 'hours');
-    }
-}
-
-export interface ITechnicalImpedimentCreationInfo {
+interface ITechnicalImpedimentCreationInfo {
     reportedBy: string;
     jira: JiraNumber;
     amount: Duration;
@@ -37,16 +18,7 @@ export interface ITechnicalImpedimentCreationInfo {
     createdAt?: Moment;
 }
 
-export interface ITechnicalImpedimentDocument {
-    amount: number;
-    jira: string;
-    reason: string;
-    reportedBy: ObjectId;
-    createdAt: Date;
-    updatedAt: Date;
-}
-
-export class TechnicalImpediment implements IValueObject {
+class TechnicalImpediment implements IValueObject {
     private amount: Duration;
     private jira: JiraNumber;
     private reason: string;
@@ -70,7 +42,7 @@ export class TechnicalImpediment implements IValueObject {
 
     static fromDocument(document: ITechnicalImpedimentDocument): TechnicalImpediment {
         var reporterId = document.reportedBy.toHexString(),
-            amount = moment.duration(document.amount, 'hours'),
+            amount = moment.duration(document.amount),
             jira = JiraNumber.fromDocument(document.jira),
             impediment = new TechnicalImpediment(reporterId, jira, amount, document.reason);
 
@@ -87,7 +59,7 @@ export class TechnicalImpediment implements IValueObject {
 
     toDocument(): Object {
         return <ITechnicalImpedimentDocument>{
-            amount: this.amount.asHours(),
+            amount: this.amount.toString(),
             jira: this.jira.toDocument(),
             reason: this.reason,
             reportedBy: ObjectId.createFromHexString(this.reportedBy),
@@ -96,3 +68,5 @@ export class TechnicalImpediment implements IValueObject {
         };
     }
 }
+
+export = TechnicalImpediment;

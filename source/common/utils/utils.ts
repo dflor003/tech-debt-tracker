@@ -12,6 +12,10 @@ class Utils {
     static isNullOrUndefined(obj: any): boolean {
         return obj == null || typeof obj === 'undefined';
     }
+
+    static coalesce<TValue>(value: TValue, defaultValue: TValue): TValue {
+        return Utils.isNullOrUndefined(value) ? defaultValue : value;
+    }
 }
 
 export = Utils;

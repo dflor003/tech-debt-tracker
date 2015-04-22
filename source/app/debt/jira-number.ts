@@ -1,3 +1,5 @@
+/// <reference path="../../../typings/libs.d.ts" />
+
 import Ensure = require('../../common/utils/ensure');
 import errors = require('../../common/utils/errors');
 import IValueObject = require('../../common/persistence/value-object');

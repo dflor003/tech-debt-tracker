@@ -4,11 +4,10 @@ import moment = require('moment');
 import Repository = require('../common/persistence/repository');
 import JiraNumber = require('../app/debt/jira-number');
 import TechDebtItem = require('../app/debt/tech-debt-item');
-import techImpediment = require('../app/debt/tech-impediment');
+import TechnicalImpediment = require('../app/debt/tech-impediment');
+import SlowdownAmount = require('../app/debt/slowdown-amount');
 import User = require('../app/auth/user');
 import Promise = Q.Promise;
-import TechnicalImpediment = techImpediment.TechnicalImpediment;
-import SlowdownAmount = techImpediment.SlowdownAmount;
 
 function seed(): Promise<any> {
     var dfd = Q.defer<any>(),

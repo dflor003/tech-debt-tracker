@@ -6,11 +6,14 @@ import Ensure = require('../../common/utils/ensure');
 import HttpStatusCode = require('../../common/web/http-status-code');
 import Repository = require('../../common/persistence/repository');
 import TechDebtItem = require('../debt/tech-debt-item');
-import techImpediment = require('../debt/tech-impediment');
+import TechnicalImpediment = require('../debt/tech-impediment');
+import ITechDebtDocument = require('../debt/i-tech-debt-document');
+import Project = require('../projects/project');
+import ProjectRepository = require('../projects/project-repository');
 import express = require('express');
 import moment = require('moment');
+import Enumerable = require('linq');
 
-import TechnicalImpediment = techImpediment.TechnicalImpediment;
 import Express = express.Express;
 import Request = express.Request;
 import Response = express.Response;
@@ -20,42 +23,54 @@ import IRouteCallback = routeHelper.IRouteCallback;
 import IViewCallback = routeHelper.IViewCallback;
 
 class TechDebtController extends BaseController {
-    private repository: Repository<TechDebtItem>;
+    private techDeptRepository: Repository<TechDebtItem>;
+    private projectRepository: ProjectRepository;
 
     constructor() {
         super('/api');
-        this.repository = new Repository<TechDebtItem>(TechDebtItem);
+        this.techDeptRepository = new Repository<TechDebtItem>(TechDebtItem);
+        this.projectRepository = new ProjectRepository();
     }
 
     initRoutes(router: IRouteHelper): void {
         router
-            .get('/:product/techdebt', this.getTechDebtList);
+            .get('/:project/techdebt', this.getTechDebtList);
     }
 
     getTechDebtList(params: IRouteParams, respond: IRouteCallback): void {
-        var product = Ensure.notNullOrEmpty(params.string('product'), 'No product code specified').toUpperCase(),
+        var projectCode = Ensure.notNullOrEmpty(params.string('project'), 'No project code specified').toUpperCase(),
             page = params.int('page', 0),
             pageSize = params.int('per_page', 20);
 
-        this.repository
-            .findAll({ productCode: product })
-            .select({
-                include: ['name', 'description', 'updatedAt'],
-                select: doc => {
-                    return {
-                        id: doc._id.toHexString(),
-                        name: doc.name,
-                        description: doc.description,
-                        updatedAt: moment(doc.updatedAt).toISOString()
-                    };
-                }
-            })
-            .skip(page)
-            .take(pageSize)
-            .orderByDescending('updatedAt')
-            .execute()
-            .then(items => respond(items))
-            .fail(err => respond(HttpStatusCode.BadRequest, { message: 'An error occurred', error: err.toString() }));
+        this.projectRepository.getProjectDevCost(projectCode)
+            .then(cost => this.techDeptRepository
+                .findAll({ productCode: projectCode })
+                .select({
+                    include: ['name', 'description', 'updatedAt', 'impediments'],
+                    select: (doc: ITechDebtDocument) => {
+                        return {
+                            id: doc._id.toHexString(),
+                            name: doc.name,
+                            description: doc.description,
+                            updatedAt: moment(doc.updatedAt).toISOString(),
+                            impedimentCount: doc.impediments.length,
+                            cost: cost * Enumerable
+                                .from(doc.impediments)
+                                .select(impediment => moment.duration(impediment.amount).asHours())
+                                .sum(),
+                            slowdowns: Enumerable
+                                .from(doc.impediments)
+                                .select(impediment => impediment.amount.toString())
+                                .toArray()
+                        };
+                    }
+                })
+                .skip(page)
+                .take(pageSize)
+                .orderByDescending('updatedAt')
+                .execute()
+                .then(items => respond(items)))
+            .catch(err => respond(HttpStatusCode.BadRequest, { message: 'An error occurred', error: err.toString() }));
     }
 }
 

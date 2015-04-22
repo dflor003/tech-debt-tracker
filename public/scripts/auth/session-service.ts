@@ -29,7 +29,7 @@ module tetra.auth {
         }
     }
 
-    export class IdentityService {
+    export class SessionService {
         private $q: ng.IQService;
         private user: LoggedInUser;
         private authService: AuthService;
@@ -76,7 +76,7 @@ module tetra.auth {
         logoutUser(): ng.IPromise<any> {
             var dfd = this.$q.defer<any>();
             if (!this.user) {
-                dfd.reject('Not logged in!')
+                dfd.reject('Not logged in!');
                 return dfd.promise;
             }
 
@@ -90,9 +90,5 @@ module tetra.auth {
         }
     }
 
-    angular
-        .module('app')
-        .service('identityService', ($q: ng.IQService, globalVars: GlobalVarsService, authService: AuthService) => {
-            return new IdentityService($q, globalVars, authService);
-        });
+    angular.module('app').service('sessionService', SessionService);
 }

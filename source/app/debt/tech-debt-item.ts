@@ -7,12 +7,12 @@ import Ensure = require('../../common/utils/ensure');
 import errors = require('../../common/utils/errors');
 import IEntity = require('../../common/persistence/entity');
 import JiraNumber = require('./jira-number');
-import techImpediments = require('./tech-impediment');
+import TechnicalImpediment = require('./tech-impediment');
+import ITechDebtDocument = require('./i-tech-debt-document');
+import ITechnicalImpedimentDocument = require('./i-tech-impediment-document');
 import ValidationError = errors.ValidationError;
 import ObjectId = mongodb.ObjectID;
 import Moment = moment.Moment;
-import ITechnicalImpedimentDocument = techImpediments.ITechnicalImpedimentDocument;
-import TechnicalImpediment = techImpediments.TechnicalImpediment;
 
 interface ITechDebtCreationData {
     productCode: string;
@@ -20,18 +20,6 @@ interface ITechDebtCreationData {
     description: string;
     impediment: TechnicalImpediment;
     createdAt?: Moment;
-}
-
-interface ITechDebtDocument {
-    _id: ObjectId;
-    createdAt: Date;
-    updatedAt: Date;
-    productCode: string;
-    reportedBy: ObjectId;
-    name: string;
-    description: string;
-    impediments: ITechnicalImpedimentDocument[];
-    associatedJiras: string[];
 }
 
 class TechDebtItem implements IEntity {

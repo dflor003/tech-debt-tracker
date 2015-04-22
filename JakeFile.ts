@@ -6,6 +6,9 @@ import Promise = Q.Promise;
 import seed = require('./source/seed-data/seed');
 
 /* Tasks */
+desc('Default task');
+task('default', ['compile']);
+
 desc('Compiles All TypeScript Files');
 task('compile', ['compile-server', 'compile-client']);
 
@@ -16,6 +19,7 @@ task('compile-server', [], () => {
         './server.ts'
     ];
 
+    console.log('Compiling server-side TypeScript files...');
     compileTypeScript({
         files: files,
         moduleType: TsModuleType.CommonJS
@@ -32,6 +36,7 @@ task('compile-client', [], () => {
         './public/scripts/**/*.ts'
     ];
 
+    console.log('Compiling client-side TypeScript files...');
     compileTypeScript({
         files: files,
         moduleType: TsModuleType.None

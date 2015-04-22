@@ -17,3 +17,4 @@
 /// <reference path="toastr/toastr.d.ts" />
 /// <reference path="linq/linq.3.0.3-Beta4.d.ts" />
 /// <reference path="moment/moment.d.ts" />
+/// <reference path="numeraljs/numeraljs.d.ts" />

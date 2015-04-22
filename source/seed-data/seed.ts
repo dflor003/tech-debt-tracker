@@ -3,6 +3,7 @@
 import Q = require('q');
 import MongoConnection = require('../common/persistence/mongo-connection');
 import Promise = Q.Promise;
+import seedProjects = require('./seed-projects');
 import seedUsers = require('./seed-users');
 import seedDebt = require('./seed-tech-debt');
 
@@ -11,6 +12,7 @@ function seed(): Promise<any> {
 
     MongoConnection.connect()
         .then(db => db.clearDatabase())
+        .then(() => seedProjects())
         .then(() => seedUsers())
         .then(() => seedDebt())
         .then(dfd.resolve)

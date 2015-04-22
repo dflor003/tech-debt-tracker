@@ -1,4 +1,4 @@
-/// <reference path="identity-service.ts" />
+/// <reference path="session-service.ts" />
 
 module tetra.auth {
     export class SecurityHelper {
@@ -6,8 +6,8 @@ module tetra.auth {
 
         static requiresLogin(): any {
             return {
-                auth: (identityService: IdentityService, $q: ng.IQService): any => {
-                    if (identityService.isLoggedIn) {
+                auth: (sessionService: SessionService, $q: ng.IQService): any => {
+                    if (sessionService.isLoggedIn) {
                         return true;
                     } else {
                         return $q.reject(SecurityHelper.NotAuthorized);

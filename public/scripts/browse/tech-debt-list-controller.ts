@@ -1,25 +1,40 @@
 /// <reference path="../libs.d.ts" />
-/// <reference path="../services/tech-debt-service.ts" />
+/// <reference path="../common/notifier.ts" />
 /// <reference path="tech-debt-list-item.ts" />
 
 module tetra.browse {
-    import TechDebtService = tetra.services.TechDebtService;
-    import ITechDebtListItemData = tetra.services.ITechDebtListItemData;
+    import ITechDebtListItemData = tetra.browse.ITechDebtListItemData;
     import TechDebtListItem = tetra.browse.TechDebtListItem;
+    import Notifier = tetra.common.Notifier;
 
     export class TechDebtListController {
-        private techDebtService: TechDebtService;
+        private $http: ng.IHttpService;
         private items: TechDebtListItem[] = [];
+        private notifier: Notifier;
         private productCode: string;
+        private currentPage = 0;
+        private pageSize = 20;
 
-        constructor($routeParams: ng.route.IRouteParamsService, techDebtService: TechDebtService) {
-            this.techDebtService = techDebtService;
+        constructor($routeParams: ng.route.IRouteParamsService, $http: ng.IHttpService, notifier: Notifier) {
+            this.$http = $http;
+            this.notifier = notifier;
             this.productCode = $routeParams['product'];
-            this.techDebtService.getTechDebtList(this.productCode, 0, 20)
+            this.loadItems(0);
+        }
+
+        loadItems(page: number) {
+            this.currentPage = page;
+            this.getTechDebtList(this.productCode, page, this.pageSize)
                 .success(response => {
                     this.items = response.map(data => new TechDebtListItem(data));
                 })
-                .error(err => this.items)
+                .error(err => {
+                    this.notifier.error(err, 'An error occurred.')
+                });
+        }
+
+        getTechDebtList(product: string, pageNum: number, pageSize: number): ng.IHttpPromise<ITechDebtListItemData[]> {
+            return this.$http.get(`/api/${product}/techdebt/?page=${pageNum}&per_page=${pageSize}`);
         }
     }
 
