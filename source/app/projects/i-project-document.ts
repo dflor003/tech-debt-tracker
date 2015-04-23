@@ -7,6 +7,7 @@ interface IProjectDocument {
     name: string;
     description: string;
     costPerDeveloperHour: number;
+    techDebtBudget: number;
 }
 
 export = IProjectDocument;

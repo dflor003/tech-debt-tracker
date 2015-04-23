@@ -11,25 +11,29 @@ import Promise = Q.Promise;
 function seed(): Promise<any> {
     var dfd = Q.defer<any>(),
         avgDevSalary = 45.36,
+        debtBudget = 10000,
         projectRepository = new Repository<Project>(Project),
         projects: Project[] = [
             Project.create({
                 code: 'omg',
                 name: 'UltiPro Organization Modeling',
                 description: 'Allows an organization to manage and model the structure of its organizational units.',
-                devHourlyCost: avgDevSalary
+                devHourlyCost: avgDevSalary,
+                techDebtBudget: debtBudget
             }),
             Project.create({
                 code: 'onb',
                 name: 'UltiPro Onboarding',
                 description: 'Assists new employees with their onboarding experience after hired into an organization.',
-                devHourlyCost: avgDevSalary
+                devHourlyCost: avgDevSalary,
+                techDebtBudget: debtBudget
             }),
             Project.create({
                 code: 'rec',
                 name: 'UltiPro Recruiting',
                 description: 'Hosts job listings, facilitates job application process, and allows recruiters to manage their recruiting process.',
-                devHourlyCost: avgDevSalary
+                devHourlyCost: avgDevSalary,
+                techDebtBudget: debtBudget
             })
         ];
 

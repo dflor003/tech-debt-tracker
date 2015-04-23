@@ -25,19 +25,19 @@ html
                 div#main-navigation.collapse.navbar-collapse
                     ul.nav.navbar-nav
                         li(ng-class='{ active: root.isActive("dashboard/*") }')
-                            a(href='#/dashboard') Dashboard
-                        li(ng-class='{ active: root.isActive("techdebt/*"), disabled: !root.currentProject }')
-                            a(href='#/techdebt/{{root.currentProject | lowercase}}',ng-if='root.currentProject') Browse
-                            a(href='javascript:void(0)',tooltip='No project selected',ng-if='!root.currentProject',tooltip-placement="bottom") Browse
-                        li(ng-class='{ active: root.isActive("techdebt/*/new") }',ng-if='root.currentProject')
-                            a(href='#/techdebt/{{root.currentProject | lowercase}}/new')
+                            a(href='#/dashboard/{{root.currentProjectCode | lowercase}}') Dashboard
+                        li(ng-class='{ active: root.isActive("techdebt/*", "techdebt/*/*"), disabled: !root.currentProjectCode }')
+                            a(href='#/techdebt/{{root.currentProjectCode | lowercase}}',ng-if='root.currentProjectCode') Browse
+                            a(href='javascript:void(0)',tooltip='No project selected',ng-if='!root.currentProjectCode',tooltip-placement="bottom") Browse
+                        li(ng-class='{ active: root.isActive("techdebt/*/new") }',ng-if='root.currentProjectCode')
+                            a(href='#/techdebt/{{root.currentProjectCode | lowercase}}/new')
                                 i.fa.fa-plus-circle.fa-2x.pull-left.toolbar-add
                                 |  Add Tech Debt
                     ul.nav.navbar-nav.navbar-right(ng-if='root.isLoggedIn')
-                        li(ng-if='root.currentProject && !root.currentUser.isMultiProject')
-                            a(href='javascript:void(0)') {{root.currentProject | uppercase}}
-                        li.dropdown(ng-if='root.currentProject && root.currentUser.isMultiProject',dropdown)
-                            a.dropdown-toggle(href='javascript:void(0)',dropdown-toggle,role='button',aria-expanded='false') {{root.currentProject | uppercase}}
+                        li(ng-if='root.currentProjectCode && !root.currentUser.isMultiProject')
+                            a(href='javascript:void(0)') {{root.currentProjectCode | uppercase}}
+                        li.dropdown(ng-if='root.currentProjectCode && root.currentUser.isMultiProject',dropdown)
+                            a.dropdown-toggle(href='javascript:void(0)',dropdown-toggle,role='button',aria-expanded='false') {{root.currentProjectCode | uppercase}}
                             ul.dropdown-menu(role='menu')
                                 li(ng-repeat='project in root.currentUser.projects')
                                     a(href='javascript:void(0)',ng-click='root.changeProject(project)') {{project}}

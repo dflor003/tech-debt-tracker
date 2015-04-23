@@ -13,6 +13,7 @@ import User = require('../auth/user');
 import Project = require('../projects/project');
 import ProjectRepository = require('../projects/project-repository');
 import UserRepository = require('../auth/user-repository');
+import TechDebtRepository = require('../debt/tech-debt-repository');
 import express = require('express');
 import moment = require('moment');
 import Enumerable = require('linq');
@@ -26,13 +27,13 @@ import IRouteCallback = routeHelper.IRouteCallback;
 import IViewCallback = routeHelper.IViewCallback;
 
 class TechDebtController extends BaseController {
-    private techDeptRepository: Repository<TechDebtItem>;
+    private techDeptRepository: TechDebtRepository;
     private projectRepository: ProjectRepository;
     private userRepository: UserRepository;
 
     constructor() {
         super('/api');
-        this.techDeptRepository = new Repository<TechDebtItem>(TechDebtItem);
+        this.techDeptRepository = new TechDebtRepository();
         this.projectRepository = new ProjectRepository();
         this.userRepository = new UserRepository();
     }

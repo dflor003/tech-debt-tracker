@@ -1,4 +1,39 @@
-<h3>Dashboard</h3>
-<p>
-    Dashboard page!
-</p>
+<fieldset>
+    <legend class="h3">
+        {{ctrl.model.project.name}}
+        <small>{{ctrl.model.project.code}}</small>
+    </legend>
+
+    <div class="row">
+        <div class="col-xs-12">
+            <p>Budget: {{ctrl.model.budget.format('$0,0.00')}}</p>
+            <p>Remaining: {{ctrl.model.remainingBudget.format('$0,0.00')}}</p>
+        </div>
+
+        <div class="col-xs-12">
+            <progressbar class="with-text text-right" type="{{ctrl.model.getProgressClass()}}" value="(100 * ctrl.model.percentOfBudget).toFixed(2)">
+                <span class="progress-text">{{ctrl.model.totalCost.format('$0,0.00')}}</span>
+            </progressbar>
+        </div>
+    </div>
+
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th>Item</th>
+                <th>Cost</th>
+                <th>Hours</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="item in ctrl.model.techDebt">
+                <td>
+                    {{item.name}} <br/>
+                    <small class="text-muted">{{item.createdAt.format('MMMM Do YYYY')}}</small>
+                </td>
+                <td>{{item.cost.format('$0,0.00')}}</td>
+                <td>{{item.timeLost.humanize()}}</td>
+            </tr>
+        </tbody>
+    </table>
+</fieldset>

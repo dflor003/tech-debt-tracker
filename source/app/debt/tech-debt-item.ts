@@ -14,6 +14,7 @@ import IImpedimentDetail = require('./i-impediment-detail');
 import ValidationError = errors.ValidationError;
 import ObjectId = mongodb.ObjectID;
 import Moment = moment.Moment;
+import Duration = moment.Duration;
 
 interface ITechDebtCreationData {
     projectCode: string;
@@ -84,10 +85,11 @@ class TechDebtItem implements IEntity {
         return !id ? null : ObjectId.createFromHexString(id);
     }
 
-    addImpediment(impediment: TechnicalImpediment): void {
+    addImpediment(impediment: TechnicalImpediment): TechDebtItem {
         Ensure.notNull(impediment, 'Impediment required');
         this.impediments.push(impediment);
         this.updateAt = impediment.getCreatedAt();
+        return this;
     }
 
     addJira(jira: JiraNumber): void {
@@ -100,6 +102,26 @@ class TechDebtItem implements IEntity {
 
     getId(): string {
         return this.id;
+    }
+
+    getName(): string {
+        return this.name;
+    }
+
+    getReporterId(): string {
+        return this.reportedBy;
+    }
+
+    getCreatedAt(): Moment {
+        return this.createdAt;
+    }
+
+    getTotalTimeLost(): Duration {
+        var hours = Enumerable
+            .from(this.impediments)
+            .sum((impediment: TechnicalImpediment) => impediment.getTimeLost().asHours());
+
+        return moment.duration(hours, 'hours');
     }
 
     toDetail(): ITechDebtItemDetail {

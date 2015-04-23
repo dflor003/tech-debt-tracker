@@ -45,11 +45,13 @@ import BaseController = require('./source/common/web/base-controller');
 import MainController = require('./source/app/controllers/main-controller');
 import TechDebtController = require('./source/app/controllers/tech-debt-controller');
 import ProjectController = require('./source/app/controllers/project-controller');
+import DashboardController = require('./source/app/controllers/dashboard-controller');
 
 var controllers: BaseController[] = [
     new MainController(),
     new TechDebtController(),
-    new ProjectController()
+    new ProjectController(),
+    new DashboardController()
 ];
 controllers.forEach(ctl => ctl.init(app));
 

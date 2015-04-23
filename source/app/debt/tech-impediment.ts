@@ -61,6 +61,10 @@ class TechnicalImpediment implements IValueObject {
         return this.createdAt;
     }
 
+    getTimeLost(): Duration {
+        return this.amount;
+    }
+
     toDetail(): IImpedimentDetail {
         return {
             reportedById: this.reportedBy,

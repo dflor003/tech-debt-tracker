@@ -12,7 +12,7 @@ module tetra {
     app
         .config(($routeProvider: IRouteProvider) => {
             $routeProvider
-                .when('/dashboard/:product', {
+                .when('/dashboard/:project', {
                     templateUrl: '/scripts/dashboard/dashboard.html',
                     controller: 'dashboardCtrl',
                     controllerAs: 'ctrl',
@@ -41,7 +41,7 @@ module tetra {
                     controller: 'loginCtrl',
                     controllerAs: 'ctrl'
                 })
-                .otherwise({ redirectTo: '/dashboard/omg' })
+                .otherwise({ redirectTo: '/dashboard/' })
         })
         .run(($rootScope: ng.IRootScopeService, $location: ng.ILocationService) => {
             $rootScope.$on('$routeChangeError', (evt, current, prev, rejection) => {

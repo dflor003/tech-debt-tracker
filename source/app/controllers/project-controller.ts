@@ -4,7 +4,7 @@ import BaseController = require('../../common/web/base-controller');
 import routeHelper = require('../../common/web/route-helper');
 import Ensure = require('../../common/utils/ensure');
 import HttpStatusCode = require('../../common/web/http-status-code');
-import Repository = require('../../common/persistence/repository');
+import ProjectRepository = require('../projects/project-repository');
 import Project = require('../projects/project');
 import express = require('express');
 import Enumerable = require('linq');
@@ -18,11 +18,11 @@ import IRouteCallback = routeHelper.IRouteCallback;
 import IViewCallback = routeHelper.IViewCallback;
 
 class ProjectController extends BaseController {
-    private projectRepository: Repository<Project>;
+    private projectRepository: ProjectRepository;
 
     constructor() {
         super('/api/projects');
-        this.projectRepository = new Repository<Project>(Project);
+        this.projectRepository = new ProjectRepository();
     }
 
     initRoutes(router: IRouteHelper): void {

@@ -14,6 +14,7 @@ interface IProjectCreationData {
     name: string;
     description: string;
     devHourlyCost?: number;
+    techDebtBudget?: number;
 }
 
 class Project implements IEntity {
@@ -21,6 +22,7 @@ class Project implements IEntity {
     private name: string;
     private description: string;
     private costPerDeveloperHour: number = 0.0;
+    private techDebtBudget: number = 0.0;
 
     constructor(code: string, name: string, description: string, devCost?: number) {
         this.code = Ensure.notNullOrEmpty(code, 'Project code is required').toUpperCase();
@@ -30,11 +32,20 @@ class Project implements IEntity {
     }
 
     static create(data: IProjectCreationData): Project {
-        return new Project(data.code, data.name, data.description, data.devHourlyCost);
+        var project = new Project(data.code, data.name, data.description, data.devHourlyCost);
+
+        if (typeof data.techDebtBudget === 'number') {
+            project.setTechDebtBudget(data.techDebtBudget);
+        }
+
+        return project;
     }
 
     static fromDocument(doc: IProjectDocument): Project {
-        return new Project(doc._id, doc.name, doc.description, doc.costPerDeveloperHour);
+        var project = new Project(doc._id, doc.name, doc.description, doc.costPerDeveloperHour);
+        project.techDebtBudget = doc.techDebtBudget;
+
+        return project;
     }
 
     getProjectCode(): string {
@@ -45,8 +56,16 @@ class Project implements IEntity {
         return this.costPerDeveloperHour;
     }
 
+    getTechDebtBudget(): number {
+        return this.techDebtBudget;
+    }
+
     getId(): string {
         return this.code;
+    }
+
+    setTechDebtBudget(newBudget: number): void {
+        this.techDebtBudget = newBudget;
     }
 
     toSummary(): any {
@@ -54,7 +73,6 @@ class Project implements IEntity {
             code: this.code,
             name: this.name,
             description: this.description,
-            devHourlyCost: this.costPerDeveloperHour
         };
     }
 
@@ -63,7 +81,8 @@ class Project implements IEntity {
             _id: this.code.toUpperCase(),
             name: this.name,
             description: this.description,
-            costPerDeveloperHour: this.costPerDeveloperHour
+            costPerDeveloperHour: this.costPerDeveloperHour,
+            techDebtBudget: this.techDebtBudget
         };
     }
 }

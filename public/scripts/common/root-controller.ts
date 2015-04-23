@@ -8,6 +8,7 @@ module tetra.common {
     import AuthService = tetra.auth.AuthService;
     import LoggedInUser = tetra.auth.LoggedInUser;
     import Notifier = tetra.common.Notifier;
+    import IProjectSummaryData = tetra.services.IProjectSummaryData;
 
     export class RootController {
         private $location: ng.ILocationService;
@@ -28,8 +29,12 @@ module tetra.common {
             return this.sessionService.currentUser;
         }
 
-        get currentProject(): string {
+        get currentProjectCode(): string {
             return this.sessionService.selectedProjectCode;
+        }
+
+        get currentProject(): IProjectSummaryData {
+            return this.sessionService.selectedProject;
         }
 
         changeProject(projectCode: string): void {
@@ -45,7 +50,11 @@ module tetra.common {
                 .catch(err => this.notifier.error(err, 'Error logging out'));
         }
 
-        isActive(path: string): boolean {
+        isActive(...paths: string[]): boolean {
+            return Enumerable.from(paths).any(path => this.isPathActive(path));
+        }
+
+        private isPathActive(path: string): boolean {
             var activePath = this.$location.path(),
                 activeParts = activePath.split('/').filter(str => !!str),
                 pathParts = path.split('/').filter(str => !!str);
