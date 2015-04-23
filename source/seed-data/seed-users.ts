@@ -40,8 +40,24 @@ function seed(): Promise<any> {
                 password: 'password',
                 firstName: 'Ernesto',
                 lastName: 'Diaz',
-                projects: ['omg', 'onb', 'rec'],
+                projects: ['omg', 'hel', 'ovr'],
                 roles: [Role.Manager]
+            }),
+            User.create({
+                username: 'DanM',
+                password: 'password',
+                firstName: 'Daniel',
+                lastName: 'Mann',
+                projects: ['ovr'],
+                roles: [Role.TeamMember]
+            }),
+            User.create({
+                username: 'PaulS',
+                password: 'password',
+                firstName: 'Paul',
+                lastName: 'Stone',
+                projects: ['hel'],
+                roles: [Role.TeamMember]
             })
         ];
 

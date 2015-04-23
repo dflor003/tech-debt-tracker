@@ -34,6 +34,20 @@ function seed(): Promise<any> {
                 description: 'Hosts job listings, facilitates job application process, and allows recruiters to manage their recruiting process.',
                 devHourlyCost: avgDevSalary,
                 techDebtBudget: debtBudget
+            }),
+            Project.create({
+                code: 'hel',
+                name: 'Some healthy project',
+                description: 'This is a sample project that\'s relatively healthy.',
+                devHourlyCost: avgDevSalary,
+                techDebtBudget: 6000
+            }),
+            Project.create({
+                code: 'ovr',
+                name: 'Over budget project',
+                description: 'This project is over budget',
+                devHourlyCost: avgDevSalary,
+                techDebtBudget: 3000
             })
         ];
 

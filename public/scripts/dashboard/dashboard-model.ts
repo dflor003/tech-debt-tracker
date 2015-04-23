@@ -53,6 +53,7 @@ module tetra.dashboard {
                         timeLost: moment.duration(item.timeLost)
                     };
                 })
+                .orderByDescending(x => x.createdAt.toDate())
                 .toArray();
             this.percentOfBudget = this.totalCost.value() / this.budget.value();
         }

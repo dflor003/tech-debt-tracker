@@ -23,7 +23,10 @@ function seed(): Promise<any> {
                 user1Id = usersByUsername['DanilF'],
                 user2Id = usersByUsername['BobB'],
                 user3Id = usersByUsername['JoeS'],
+                user4Id = usersByUsername['PaulS'],
+                user5Id = usersByUsername['DanM'],
                 items = [
+                    /* Omg */
                     TechDebtItem.create({
                         projectCode: 'omg',
                         name: 'Our ids are ints and not GUIDs',
@@ -154,7 +157,86 @@ function seed(): Promise<any> {
                         amount: SlowdownAmount.small(),
                         reason: 'Canvas is loading slower and slower. Time it takes to run UI tests is growing due to canvas performance',
                         createdAt: moment('03-14-2015', 'MM-DD-YYYY')
+                    })),
+
+                    /* Healthy Project */
+                    TechDebtItem.create({
+                        projectCode: 'hel',
+                        name: 'Some minor nuisance in the code base, not a big deal.',
+                        description: 'The flow of development is not ideal',
+                        createdAt: moment('01-01-2015', 'MM-DD-YYYY'),
+                        impediment: TechnicalImpediment.create({
+                            reportedBy: user4Id,
+                            jira: new JiraNumber('ULTI-161023'),
+                            amount: SlowdownAmount.small(),
+                            reason: 'This one thing was bothering me...',
+                            createdAt: moment('01-01-2015', 'MM-DD-YYYY')
+                        })
+                    })
+                    .addImpediment(TechnicalImpediment.create({
+                        reportedBy: user4Id,
+                        jira: new JiraNumber('ULTI-162233'),
+                        amount: SlowdownAmount.large(),
+                        reason: 'It bothered me again',
+                        createdAt: moment('01-10-2015', 'MM-DD-YYYY')
+                    })),
+
+                    /* Overbudget project */
+                    TechDebtItem.create({
+                        projectCode: 'ovr',
+                        name: 'This thing is bad!',
+                        description: 'Our state-of-the-art leaderships enforce our established simplicity. One-to-one ecosystems expediently transfer the stakeholders.',
+                        createdAt: moment('12-12-2014', 'MM-DD-YYYY'),
+                        impediment: TechnicalImpediment.create({
+                            reportedBy: user5Id,
+                            jira: new JiraNumber('ULTI-156111'),
+                            amount: SlowdownAmount.extraLarge(),
+                            reason: 'Our multi-source transformation processes enforce replacement, non-mainstream and forward-looking performance cultures up-front. Our benchmarks generate our time-phases. An operational and collateral blended approach aggregates a low-risk high-yield and/or low-risk high-yield message.',
+                            createdAt: moment('12-12-2014', 'MM-DD-YYYY')
+                        })
+                    })
+                    .addImpediment(TechnicalImpediment.create({
+                        reportedBy: user5Id,
+                        jira: new JiraNumber('ULTI-161123'),
+                        amount: SlowdownAmount.extraLarge(),
+                        reason: 'The business leaders innovate an accessible benchmarking.',
+                        createdAt: moment('01-10-2015', 'MM-DD-YYYY')
                     }))
+                    .addImpediment(TechnicalImpediment.create({
+                        reportedBy: user5Id,
+                        jira: new JiraNumber('ULTI-171223'),
+                        amount: SlowdownAmount.extraLarge(),
+                        reason: 'Our time-phased contents enable the human resources. The established knowledge transfers prioritize an adaptive on-boarding process across the silos; this is why the resources transition an awesome measure.',
+                        createdAt: moment('01-11-2015', 'MM-DD-YYYY')
+                    })),
+
+                    TechDebtItem.create({
+                        projectCode: 'ovr',
+                        name: 'Our gut-feeling is that a parallel risk appetite strengthens the clients.',
+                        description: 'The stakeholders establish a value-added integration. Our cultural business lines significantly drive the partners reaped from our sustainable yield enhancement; this is why relevant gamifications drive the Senior Chief of Business Planning.',
+                        createdAt: moment('12-12-2014', 'MM-DD-YYYY'),
+                        impediment: TechnicalImpediment.create({
+                            reportedBy: user5Id,
+                            jira: new JiraNumber('ULTI-115663'),
+                            amount: SlowdownAmount.medium(),
+                            reason: 'The unified and present-day best practices generate leading-edge and intelligent branding strategies by expanding boundaries. Our framework seamlessly influences the Chief Visionary Officer because our scaling produces organic improvement. Our gut-feeling is that the group maximizes an outsourced collaboration. A measurable vision drives tolerably expensive, tactical, Balanced Scorecards as a consequence of robust expansion.',
+                            createdAt: moment('12-05-2014', 'MM-DD-YYYY')
+                        })
+                    })
+                    .addImpediment(TechnicalImpediment.create({
+                        reportedBy: user5Id,
+                        jira: new JiraNumber('ULTI-181282'),
+                        amount: SlowdownAmount.large(),
+                        reason: 'The resource integrates adequate, in-depth, win-win solutions. The senior support staff adequately improves a sales target by nurturing talent. A cross-industry, structural, granularity strengthens our technologies. The prospective innovations leverage goal-oriented say/do ratios up-front. Our verifiable and sustainable specification quality impacts a planning; this is why an idiosyncrasy adds value. The clients take a bite out of an enhanced on-boarding process 50/50, while the resources conservatively right-size our unprecedented growth.',
+                        createdAt: moment('01-12-2015', 'MM-DD-YYYY')
+                    }))
+                    .addImpediment(TechnicalImpediment.create({
+                        reportedBy: user5Id,
+                        jira: new JiraNumber('ULTI-128292'),
+                        amount: SlowdownAmount.extraLarge(),
+                        reason: 'The project manager keeps it on the radar... or it gets the hose again.',
+                        createdAt: moment('02-15-2015', 'MM-DD-YYYY')
+                    })),
                 ];
 
             debtRepository

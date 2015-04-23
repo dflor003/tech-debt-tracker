@@ -9,9 +9,9 @@
 
         <div class="form-group">
             <p class="form-control-static">
-                This technical debt item has cost us <span class="text-danger">{{ctrl.model.totalCost.format('$0,0.00')}}</span>
-                in wasted hours over the course of {{ctrl.model.createdAt.fromNow(true)}}. The team has lost around
-                {{ctrl.model.totalDuration.humanize()}} of development time dealing with this issue.
+                This technical debt item has cost us about <strong class="text-danger">{{ctrl.model.totalCost.format('$0,0.00')}}</strong>
+                in wasted hours over the course of <strong>{{ctrl.model.createdAt.fromNow(true)}}</strong>. The team has lost around
+                <strong>{{ctrl.model.totalDuration.humanize()}}</strong> of development time dealing with this issue.
 
             </p>
         </div>
@@ -38,6 +38,7 @@
             <div class="list-group">
                 <div class="list-group-item" ng-repeat="item in ctrl.model.impediments">
                     <span class="badge">Cost: {{item.cost.format('$0,0.00')}}</span>
+                    <span class="badge">Lag: {{item.amount.humanize()}}</span>
                     <h4 class="list-group-item-heading">
                         {{item.jira}}
                         <small>{{item.reportedBy}}</small>
