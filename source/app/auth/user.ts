@@ -37,6 +37,12 @@ interface ILoggedInUser {
     roles: Role[];
 }
 
+interface IUserInfo {
+    id: string;
+    firstName: string;
+    lastName: string;
+}
+
 class User implements IEntity {
     private id: string;
     private username: string;
@@ -46,11 +52,10 @@ class User implements IEntity {
     private roles: Role[] = [];
     private projects: string[] = [];
 
-    constructor(
-        username: string,
-        password: Password,
-        firstName: string,
-        lastName: string) {
+    constructor(username: string,
+                password: Password,
+                firstName: string,
+                lastName: string) {
         this.username = Ensure.notNullOrEmpty(username, 'Username is required');
         this.password = Ensure.notNull(password, 'Password is required');
         this.firstName = Ensure.notNullOrEmpty(firstName, 'First name is required');
@@ -127,6 +132,14 @@ class User implements IEntity {
             roles: this.roles.map(role => Role[role]),
             projects: this.projects
         }
+    }
+
+    toUserInfo(): IUserInfo {
+        return {
+            id: this.id,
+            firstName: this.firstName,
+            lastName: this.lastName
+        };
     }
 
     toLoggedInUser(): ILoggedInUser {

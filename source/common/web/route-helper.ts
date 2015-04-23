@@ -116,6 +116,11 @@ module routeHelper {
 
             this.router.get(<any>url, (req: Request, res: Response, next: Function) => {
                 var responseCallback = () => {
+                    // Error check
+                    if (arguments[0] instanceof Error) {
+                        return next(arguments[0]);
+                    }
+
                     // Coalesce args
                     var status = arguments.length === 3 ? arguments[0] : HttpStatusCode.OK,
                         view = arguments.length === 3 ? arguments[1] : arguments[0],
@@ -126,7 +131,8 @@ module routeHelper {
                 };
 
                 var routeParams = new RouteParams(req.params, req.query, req.body);
-                handler.apply(this.scope, [routeParams, responseCallback, req, res, next]);
+                try { handler.apply(this.scope, [routeParams, responseCallback, req, res, next]); }
+                catch (error) { return next(error); }
             });
 
             return this;

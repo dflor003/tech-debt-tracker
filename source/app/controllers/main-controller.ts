@@ -3,8 +3,8 @@
 import BaseController = require('../../common/web/base-controller');
 import routeHelper = require('../../common/web/route-helper');
 import HttpStatusCode = require('../../common/web/http-status-code');
-import Repository = require('../../common/persistence/repository');
 import User = require('../auth/user');
+import UserRepository = require('../auth/user-repository');
 import express = require('express');
 import passport = require('passport');
 import passportLocal = require('passport-local');
@@ -19,11 +19,11 @@ import IRouteCallback = routeHelper.IRouteCallback;
 import IViewCallback = routeHelper.IViewCallback;
 
 class MainController extends BaseController {
-    private userRepo: Repository<User>;
+    private userRepo: UserRepository;
 
-    constructor(userRepository?: Repository<User>) {
+    constructor(userRepository?: UserRepository) {
         super();
-        this.userRepo = userRepository || new Repository<User>(User);
+        this.userRepo = userRepository || new UserRepository();
     }
 
     initMiddleware() {

@@ -2,6 +2,7 @@ import Q = require('q');
 import Enumerable = require('linq');
 import moment = require('moment');
 import Repository = require('../common/persistence/repository');
+import UserRepository = require('../app/auth/user-repository');
 import JiraNumber = require('../app/debt/jira-number');
 import TechDebtItem = require('../app/debt/tech-debt-item');
 import TechnicalImpediment = require('../app/debt/tech-impediment');
@@ -11,7 +12,7 @@ import Promise = Q.Promise;
 
 function seed(): Promise<any> {
     var dfd = Q.defer<any>(),
-        userRepository = new Repository<User>(User),
+        userRepository = new UserRepository(),
         debtRepository = new Repository<TechDebtItem>(TechDebtItem);
 
     userRepository.findAll({})

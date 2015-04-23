@@ -6,6 +6,7 @@ import errors = require('../../common/utils/errors');
 import IValueObject = require('../../common/persistence/value-object');
 import JiraNumber = require('./jira-number');
 import ITechnicalImpedimentDocument = require('./i-tech-impediment-document');
+import IImpedimentDetail = require('./i-impediment-detail');
 import Moment = moment.Moment;
 import Duration = moment.Duration;
 import ObjectId = mongodb.ObjectID;
@@ -55,6 +56,17 @@ class TechnicalImpediment implements IValueObject {
 
     getCreatedAt(): Moment {
         return this.createdAt;
+    }
+
+    toDetail(): IImpedimentDetail {
+        return {
+            reportedById: this.reportedBy,
+            reporter: null,
+            jira: this.jira.toString(),
+            amount: this.amount.toISOString(),
+            reason: this.reason,
+            createdAt: this.createdAt.toISOString()
+        };
     }
 
     toDocument(): Object {

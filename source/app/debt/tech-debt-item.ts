@@ -10,6 +10,7 @@ import JiraNumber = require('./jira-number');
 import TechnicalImpediment = require('./tech-impediment');
 import ITechDebtDocument = require('./i-tech-debt-document');
 import ITechnicalImpedimentDocument = require('./i-tech-impediment-document');
+import IImpedimentDetail = require('./i-impediment-detail');
 import ValidationError = errors.ValidationError;
 import ObjectId = mongodb.ObjectID;
 import Moment = moment.Moment;
@@ -20,6 +21,13 @@ interface ITechDebtCreationData {
     description: string;
     impediment: TechnicalImpediment;
     createdAt?: Moment;
+}
+
+interface ITechDebtItemDetail {
+    projectCode: string;
+    name: string;
+    description: string;
+    impediments: IImpedimentDetail[];
 }
 
 class TechDebtItem implements IEntity {
@@ -90,6 +98,15 @@ class TechDebtItem implements IEntity {
 
     getId(): string {
         return this.id;
+    }
+
+    toDetail(): ITechDebtItemDetail {
+        return {
+            projectCode: this.projectCode,
+            name: this.name,
+            description: this.description,
+            impediments: this.impediments.map(x => x.toDetail())
+        };
     }
 
     toDocument(): Object {

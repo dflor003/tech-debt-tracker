@@ -2,14 +2,14 @@
 
 import Q = require('q');
 import Enumerable = require('linq');
-import Repository = require('../common/persistence/repository');
+import UserRepository = require('../app/auth/user-repository');
 import User = require('../app/auth/user');
 import Role = require('../app/auth/roles');
 import Promise = Q.Promise;
 
 function seed(): Promise<any> {
     var dfd = Q.defer<any>(),
-        userRepository = new Repository<User>(User),
+        userRepository = new UserRepository(),
         users = [
             User.create({
                 username: 'BobB',

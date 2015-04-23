@@ -6,3 +6,6 @@
 /// <reference path="../../typings/linq/linq.3.0.3-Beta4.d.ts" />
 /// <reference path="../../typings/moment/moment.d.ts" />
 /// <reference path="../../typings/numeraljs/numeraljs.d.ts" />
+/// <reference path="common/event-bus.ts" />
+/// <reference path="common/message-log.ts" />
+/// <reference path="common/notifier.ts" />
