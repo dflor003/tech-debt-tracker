@@ -9,21 +9,20 @@ module tetra.dashboard {
     import MessageLog = tetra.common.MessageLog;
 
     export class DashboardController {
-        private project: IProjectSummaryData = null;
         private $http: ng.IHttpService;
         private $location: ng.ILocationService;
-        private projectService: ProjectService;
         private log = new MessageLog();
 
         model: DashboardSummary;
 
-        constructor($routeParams: ng.route.IRouteParamsService, $http: ng.IHttpService, $location: ng.ILocationService, projectService: ProjectService, eventBus: EventBus) {
+        constructor($routeParams: ng.route.IRouteParamsService, $http: ng.IHttpService, $location: ng.ILocationService, eventBus: EventBus) {
             this.$http = $http;
             this.$location = $location;
-            this.projectService = projectService;
 
             var projectCode = $routeParams['project'];
             this.loadDashboard(projectCode);
+
+            eventBus.on('project-changed', newProject => this.$location.path(`/dashboard/${newProject.code}`));
         }
 
         loadDashboard(projectCode: string): void {
@@ -32,10 +31,8 @@ module tetra.dashboard {
                 .error(err => this.log.addErrorResponse(err));
         }
 
-        loadProject(projectCode: string): void {
-            this.projectService.getProjectByCode(projectCode)
-                .success(project => this.project = project)
-                .error(err => this.log.addErrorResponse(err));
+        goToItem(id: string): void {
+            this.$location.path(`/techdebt/${this.model.project.code}/${id}`);
         }
     }
 

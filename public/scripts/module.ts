@@ -41,7 +41,7 @@ module tetra {
                     controller: 'loginCtrl',
                     controllerAs: 'ctrl'
                 })
-                .otherwise({ redirectTo: '/dashboard/' })
+                .otherwise({ redirectTo: '/login' })
         })
         .run(($rootScope: ng.IRootScopeService, $location: ng.ILocationService) => {
             $rootScope.$on('$routeChangeError', (evt, current, prev, rejection) => {

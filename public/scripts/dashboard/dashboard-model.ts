@@ -3,6 +3,8 @@
 
 module tetra.dashboard {
     import IProjectSummaryData = tetra.services.IProjectSummaryData;
+    import Moment = moment.Moment;
+    import Duration = moment.Duration;
 
     export interface IDashboardData {
         project: IProjectSummaryData;
@@ -25,18 +27,20 @@ module tetra.dashboard {
     export class DashboardSummary {
         project: IProjectSummaryData;
         budget: Numeral;
-        costPerHour: number;
+        costPerHour: Numeral;
         totalCost: Numeral;
-        totalTimeLost: number;
+        totalTimeLost: Duration;
         techDebt: any[];
         percentOfBudget: number;
+        warningThreshold = 0.6;
+        dangerThreshold = 0.8;
 
         constructor(data: IDashboardData) {
             this.project = data.project;
             this.budget = numeral(data.budget);
-            this.costPerHour = data.costPerHour;
+            this.costPerHour = numeral(data.costPerHour);
             this.totalCost = numeral(data.totalCost);
-            this.totalTimeLost = data.totalTimeLost;
+            this.totalTimeLost = moment.duration(data.totalTimeLost, 'hours');
             this.techDebt = Enumerable
                 .from(data.techDebt)
                 .select((item: ITechDebtData) => {
@@ -50,31 +54,39 @@ module tetra.dashboard {
                     };
                 })
                 .toArray();
-            this.percentOfBudget = this.isOverBudget ? 1 : (this.totalCost.value() / this.budget.value());
+            this.percentOfBudget = this.totalCost.value() / this.budget.value();
         }
 
-        get percentOfBudgetDisplay(): string {
-            return (100 * this.percentOfBudget).toFixed(2)
+        get calculationTooltip(): string {
+            return `Calculation: ${this.totalTimeLost.asHours()} hours &times; ${this.costPerHour.format('$0,0.00')} avg dev hourly cost`
         }
 
         get remainingBudget(): Numeral {
             return numeral(this.budget.value() - this.totalCost.value());
         }
 
+        get amountOverBudget(): Numeral {
+            return !this.isOverBudget ? numeral(0) : numeral(Math.abs(this.remainingBudget.value()));
+        }
+
         get isOverBudget(): boolean {
             return this.totalCost.value() > this.budget.value();
         }
 
-        getProgressClass(): string {
-            if (this.percentOfBudget > 0.5) {
-                return 'warning';
-            }
+        get progressBarPercent(): string {
+            return Math.min(100, (100 * this.percentOfBudget)).toFixed(2);
+        }
 
-            if (this.percentOfBudget > 0.80) {
+        getProgressClass(): string {
+            if (this.percentOfBudget > this.dangerThreshold) {
                 return 'danger';
             }
 
-            return null;
+            if (this.percentOfBudget > this.warningThreshold) {
+                return 'warning';
+            }
+
+            return 'success';
         }
     }
 }

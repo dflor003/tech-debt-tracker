@@ -1,6 +1,11 @@
 <form name="techDebtDetail" ng-submit="ctrl.save(techDebtDetail)">
     <fieldset>
-        <legend class="h3">{{ctrl.model.name}}</legend>
+        <legend class="h3">
+            <a class="btn btn-sm btn-default btn-link pull-left" href="#/techdebt/{{ctrl.projectCode}}">
+                <i class="fa fa-2x fa-long-arrow-left"></i>
+            </a>
+            {{ctrl.model.name}}
+        </legend>
 
         <div class="form-group">
             <p class="form-control-static">
