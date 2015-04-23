@@ -25,7 +25,7 @@ module tetra.techdebt {
         }
 
         loadDetail(): void {
-            this.$http.get<ITechDebtDetailData>(`/api/techdebt/${this.projectCode}/${this.itemId}`)
+            this.$http.get<ITechDebtDetailData>(`/api/${this.projectCode}/techdebt/${this.itemId}`)
                 .success(result => {
                     this.model = new TechDebtDetail(result);
                 })

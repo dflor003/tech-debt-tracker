@@ -47,6 +47,9 @@ class TechnicalImpediment implements IValueObject {
             jira = JiraNumber.fromDocument(document.jira),
             impediment = new TechnicalImpediment(reporterId, jira, amount, document.reason);
 
+        impediment.createdAt = moment(document.createdAt);
+        impediment.updatedAt = moment(document.updatedAt);
+
         return impediment;
     }
 

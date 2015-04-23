@@ -28,6 +28,8 @@ interface ITechDebtItemDetail {
     name: string;
     description: string;
     impediments: IImpedimentDetail[];
+    devHourCost: number;
+    createdAt: string;
 }
 
 class TechDebtItem implements IEntity {
@@ -105,7 +107,9 @@ class TechDebtItem implements IEntity {
             projectCode: this.projectCode,
             name: this.name,
             description: this.description,
-            impediments: this.impediments.map(x => x.toDetail())
+            impediments: this.impediments.map(x => x.toDetail()),
+            devHourCost: 0.0,
+            createdAt: this.createdAt.toISOString()
         };
     }
 

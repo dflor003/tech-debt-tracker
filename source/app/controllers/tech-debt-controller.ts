@@ -84,27 +84,29 @@ class TechDebtController extends BaseController {
         var projectCode = Ensure.notNullOrEmpty(params.string('project'), 'No project code specified').toUpperCase(),
             id = Ensure.notNullOrEmpty(params.string('id'), 'No tech debt id specified');
 
-        this.techDeptRepository
-            .findById(id)
-            .then((result: TechDebtItem) => {
-                var detail = result.toDetail(),
-                    userIds = Enumerable
-                        .from(detail.impediments)
-                        .select(x => x.reportedById)
-                        .toArray();
+        this.projectRepository.getProjectDevCost(projectCode)
+            .then(cost => this.techDeptRepository
+                .findById(id)
+                .then((result: TechDebtItem) => {
+                    var detail = result.toDetail(),
+                        userIds = Enumerable
+                            .from(detail.impediments)
+                            .select(x => x.reportedById)
+                            .toArray();
 
-                return this.userRepository
-                    .findUsersWithIds(userIds)
-                    .then(users => {
-                        var usersById = Enumerable
-                            .from(users)
-                            .toObject(user => user.getId(), user => user.toUserInfo());
+                    return this.userRepository
+                        .findUsersWithIds(userIds)
+                        .then(users => {
+                            var usersById = Enumerable
+                                .from(users)
+                                .toObject(user => user.getId(), user => user.toUserInfo());
 
-                        detail.impediments.forEach(impediment => impediment.reporter = usersById[impediment.reportedById]);
+                            detail.impediments.forEach(impediment => impediment.reporter = usersById[impediment.reportedById]);
+                            detail.devHourCost = cost;
 
-                        respond(detail);
-                    });
-            })
+                            respond(detail);
+                        });
+                }))
             .catch(err => respond(err));
     }
 
