@@ -65,7 +65,7 @@ module tetra.techdebt {
             }
 
             this.$http.post(`/api/${this.projectCode}/techdebt`, this.model.toData())
-                .success(() => this.$location.path(`/techdebt/${this.projectCode.toLowerCase()}`))
+                .success((newItem: any) => this.$location.path(`/techdebt/${this.projectCode.toLowerCase()}/${newItem.id}`))
                 .error(err => this.log.addErrorResponse(err));
         }
 
