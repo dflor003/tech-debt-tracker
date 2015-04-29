@@ -110,9 +110,11 @@ function compileTypeScript(args: ITypeScriptCompileOptions): Promise<string[]> {
     var deferred = Q.defer<string[]>(),
         files = fileList.toArray(),
         command = commandParts.concat(files).join(' '),
-        exec = jake.createExec([command]);
+        exec = jake.createExec([command]),
+        appDataPath = process.env['APPDATA'],
+        tsc = appDataPath + '\\npm\\tsc';
 
-    return run('tsc', commandParts.concat(files));
+    return run(tsc, commandParts.concat(files));
 }
 
 function run(cmd: string, args: string[]): Promise<any>;
