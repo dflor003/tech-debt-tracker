@@ -34,7 +34,7 @@ function beginSection() {
 
 beginSection "Installing project global dependencies..."
 installPackage "less"
-installPackage "typescript"
+installPackage "typescript@1.4.1"
 installPackage "tsd@next"
 installPackage "karma-cli"
 installPackage "jake"
@@ -47,4 +47,5 @@ beginSection "Installing Bower depenendencies..."
 bower install
 
 beginSection "Compiling Jake Scripts..."
-tsc --target ES5 --module CommonJS JakeFile.ts
+tsc=${APPDATA}/npm/tsc
+${tsc} --target ES5 --module CommonJS JakeFile.ts
