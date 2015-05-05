@@ -4,6 +4,8 @@
 import Q = require('q');
 import Promise = Q.Promise;
 import seed = require('./source/seed-data/seed');
+import iis = require('iis');
+import path = require('path');
 
 /* Tasks */
 desc('Default task');
@@ -24,9 +26,9 @@ task('compile-server', [], () => {
         files: files,
         moduleType: TsModuleType.CommonJS
     })
-    .then(() => console.log('Done compiling server-side TypeScript files!'))
-    .catch(() => console.error('Failed to compile server-side TypeScript files!'))
-    .finally(() => complete());
+        .then(() => console.log('Done compiling server-side TypeScript files!'))
+        .catch(() => console.error('Failed to compile server-side TypeScript files!'))
+        .finally(() => complete());
 
 }, {async: true});
 
@@ -41,9 +43,9 @@ task('compile-client', [], () => {
         files: files,
         moduleType: TsModuleType.None
     })
-    .then(() => console.log('Done compiling client-side TypeScript files!'))
-    .catch(() => console.error('Failed to compile client-side TypeScript files!'))
-    .finally(() => complete());
+        .then(() => console.log('Done compiling client-side TypeScript files!'))
+        .catch(() => console.error('Failed to compile client-side TypeScript files!'))
+        .finally(() => complete());
 
 }, {async: true});
 
@@ -54,7 +56,7 @@ task('seed', [], () => {
         .catch(err => console.error(`Error occurred seeding: ${err}\n${err.stack}`))
         .finally(() => complete());
 
-}, { async: true });
+}, {async: true});
 
 namespace('mongo', () => {
     desc('Starts up local MongoDB instance');
@@ -63,7 +65,7 @@ namespace('mongo', () => {
             .then(() => console.log('MongoDB service started'))
             .catch((error) => console.error(`Error starting MongoDB service! - ${error}`))
             .finally(() => complete());
-    }, { async: true });
+    }, {async: true});
 
     desc('Stops local MongoDB instance');
     task('stop', [], () => {
@@ -71,6 +73,21 @@ namespace('mongo', () => {
             .then(() => console.log('MongoDB service stopped'))
             .catch((error) => console.error(`Error stopping MongoDB service! - ${error}`))
             .finally(() => complete());
+    }, {async: true});
+});
+
+namespace('iis', () => {
+    desc('Installs app into local IIS');
+    task('install', () => {
+        var defaultWebsite = 'Default Web Site',
+            appName = 'TeTra',
+            fullPath = path.resolve(__dirname);
+
+        createIisEntry(defaultWebsite, appName, fullPath)
+            .then(() => console.log(`Created IIS app '${appName}' successfully!`))
+            .catch((error) => console.error(`Error creating IIS app - ${error}`))
+            .finally(() => complete());
+
     }, { async: true });
 });
 
@@ -133,4 +150,30 @@ function run(cmd: string, args: any): Promise<any> {
 
     exec.run();
     return deferred.promise;
+}
+
+function createIisEntry(site: string, appName: string, physicalPath: string): Promise<string> {
+    var dfd = Q.defer<string>(),
+        appPath = `${site}/${appName}`;
+
+    iis.exists('site', site, (err, exists) => {
+        if (err) return dfd.reject(err);
+        if (!exists) return dfd.reject(`Site ${site} does not exist`);
+
+        iis.exists('app', appPath, (err, exists) => {
+            if (err) return dfd.reject(err);
+            if (exists) return dfd.reject(`Application ${appPath} already exists`);
+
+            iis.createAppFolder({
+                site:site,
+                virtual_path:appName,
+                physical_path: physicalPath
+            }, (err, out) => {
+                if (err) return dfd.reject(err);
+                else dfd.resolve(out);
+            });
+        });
+    });
+
+    return dfd.promise;
 }

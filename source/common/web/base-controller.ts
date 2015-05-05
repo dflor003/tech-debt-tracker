@@ -11,10 +11,10 @@ class BaseController {
     baseUrl: string;
 
     constructor(baseUrl?: string) {
-        this.baseUrl = typeof baseUrl === 'string' ? baseUrl : '/';
+        this.baseUrl = typeof baseUrl === 'string' ? baseUrl : null;
     }
 
-    init(app: Express): void {
+    init(rootDir: string, app: Express): void {
         // Setup router and helper
         var router = express.Router(),
             routeHelper = new RouteHelper(router, this);
@@ -24,7 +24,9 @@ class BaseController {
         this.initRoutes(routeHelper);
 
         // Inject router into app
-        app.use(this.baseUrl, router);
+        rootDir = rootDir || '/';
+        var baseUrl = !this.baseUrl ? rootDir : rootDir + this.baseUrl
+        app.use(baseUrl, router);
     }
 
     initMiddleware(app: Express): void {

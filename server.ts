@@ -20,7 +20,8 @@ import HttpError = errors.HttpError;
 
 // Setup
 var app = express(),
-    isDev = app.get('env') === 'development';
+    isDev = app.get('env') === 'development',
+    rootVirtualDirectory = process.env.rootVirtualDirectory || '/';
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -38,7 +39,7 @@ app.use(passport.session());
 app.use(require('less-middleware')(path.join(__dirname, 'public'), {
     force: true
 }));
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(rootVirtualDirectory, express.static(path.join(__dirname, 'public')));
 
 // Controllers
 import BaseController = require('./source/common/web/base-controller');
@@ -53,7 +54,8 @@ var controllers: BaseController[] = [
     new ProjectController(),
     new DashboardController()
 ];
-controllers.forEach(ctl => ctl.init(app));
+controllers.forEach(ctl => ctl.init(rootVirtualDirectory, app));
+console.log('Root dir', rootVirtualDirectory);
 
 // Error handlers
 app.use((req: Request, res: Response, next: Function) => {

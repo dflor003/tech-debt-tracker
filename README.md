@@ -5,7 +5,7 @@ Tool to track and visualize Technical Debt with the aim of answering the age-old
 To install all local/global dependencies:
 
 ```bash
-    npm install
+npm install
 ```
     
 Once that succeeds, run the following command to compile all client-side and server-side TypeScript files:

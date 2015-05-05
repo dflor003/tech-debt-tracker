@@ -26,6 +26,7 @@
     "serve-favicon": "~2.2.0"
   },
   "devDependencies": {
+    "iis": "^0.2.0",
     "jasmine-core": "^2.2.0",
     "karma": "^0.12.31",
     "karma-chrome-launcher": "^0.1.7",
