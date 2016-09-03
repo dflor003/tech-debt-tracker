@@ -1,0 +1,16 @@
+{
+  "name": "TechDebtTracker",
+  "dependencies": {
+    "cors": "registry:npm/cors#2.7.0+20160902012746",
+    "express": "registry:npm/express#4.14.0+20160815112707",
+    "node-uuid": "registry:npm/node-uuid#1.4.7+20160723033700"
+  },
+  "globalDependencies": {
+    "body-parser": "registry:dt/body-parser#0.0.0+20160619023215",
+    "cookie-parser": "registry:dt/cookie-parser#1.3.4+20160316155526",
+    "moment": "registry:dt/moment#2.11.1+20160829143156",
+    "morgan": "registry:dt/morgan#1.7.0+20160524142355",
+    "node": "registry:env/node#6.0.0+20160902022231",
+    "serve-favicon": "registry:dt/serve-favicon#0.0.0+20160316155526"
+  }
+}
