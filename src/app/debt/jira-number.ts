@@ -2,7 +2,7 @@
 
 import Ensure = require('../../common/utils/ensure');
 import errors = require('../../utils/errors/errors');
-import IValueObject = require('../../common/persistence/value-object');
+import IValueObject = require('../../infrastructure/persistence/value-object');
 import ValidationError = errors.ValidationError;
 
 class JiraNumber implements IValueObject {

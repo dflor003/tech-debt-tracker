@@ -1,7 +1,7 @@
 /// <reference path="../../typings/q/q.d.ts" />
 
 import Q = require('q');
-import MongoConnection = require('../common/persistence/mongo-connection');
+import MongoConnection = require('../infrastructure/db/mongo-connection');
 import Promise = Q.Promise;
 import seedProjects = require('./seed-projects');
 import seedUsers = require('./seed-users');

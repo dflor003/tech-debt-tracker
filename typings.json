@@ -1,8 +1,10 @@
 {
   "name": "TechDebtTracker",
   "dependencies": {
+    "chai": "registry:npm/chai#3.5.0+20160723033700",
     "cors": "registry:npm/cors#2.7.0+20160902012746",
     "express": "registry:npm/express#4.14.0+20160815112707",
+    "mongodb": "registry:npm/mongodb#2.1.0+20160721204323",
     "node-uuid": "registry:npm/node-uuid#1.4.7+20160723033700"
   },
   "globalDependencies": {
@@ -12,5 +14,11 @@
     "morgan": "registry:dt/morgan#1.7.0+20160524142355",
     "node": "registry:env/node#6.0.0+20160902022231",
     "serve-favicon": "registry:dt/serve-favicon#0.0.0+20160316155526"
+  },
+  "devDependencies": {
+    "chai": "registry:npm/chai#3.5.0+20160723033700"
+  },
+  "globalDevDependencies": {
+    "mocha": "registry:dt/mocha#2.2.5+20160720003353"
   }
 }

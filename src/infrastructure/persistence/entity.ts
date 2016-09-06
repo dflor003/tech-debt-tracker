@@ -3,4 +3,4 @@ interface IEntity {
     toDocument(): Object;
 }
 
-export = IEntity;
+export default IEntity;

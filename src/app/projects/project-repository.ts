@@ -1,7 +1,7 @@
 /// <reference path="../../../typings/libs.d.ts" />
 
 import Q = require('q');
-import Repository = require('../../common/persistence/repository');
+import Repository = require('../../infrastructure/persistence/repository');
 import Project = require('./project');
 import Promise = Q.Promise;
 

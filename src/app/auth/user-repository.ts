@@ -4,7 +4,7 @@ import User = require('./user');
 import Q = require('q');
 import Enumerable = require('linq');
 import mongodb = require('mongodb');
-import Repository = require('../../common/persistence/repository');
+import Repository = require('../../infrastructure/persistence/repository');
 import Promise = Q.Promise;
 
 import ObjectId = mongodb.ObjectID;

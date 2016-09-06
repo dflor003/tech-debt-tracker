@@ -1,7 +1,7 @@
 /// <reference path="../../../typings/libs.d.ts" />
 
 import errors = require('../../utils/errors/errors');
-import IValueObject = require('../../common/persistence/value-object');
+import IValueObject = require('../../infrastructure/persistence/value-object');
 import ValidationError = errors.ValidationError;
 import AuthHelper = require('./auth-helper');
 import Ensure = require('../../common/utils/ensure');

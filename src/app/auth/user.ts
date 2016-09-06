@@ -2,7 +2,7 @@
 
 import Ensure = require('../../common/utils/ensure');
 import errors = require('../../utils/errors/errors');
-import IEntity = require('../../common/persistence/entity');
+import IEntity = require('../../infrastructure/persistence/entity');
 import Role = require('./roles');
 import password = require('./password');
 import mongodb = require('mongodb');
