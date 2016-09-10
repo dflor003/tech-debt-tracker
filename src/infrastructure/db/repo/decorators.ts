@@ -36,3 +36,26 @@ export function ToDocument(clazz?: FunctionConstructor): MethodDecorator {
         };
     };
 }
+
+export interface IIdOptions {
+    type?: 'objectid' | 'uuid';
+}
+
+export function Id(opts?: IIdOptions): PropertyDecorator {
+    return (target, property) => {
+        // Error checks
+        if (typeof target !== 'object' || typeof property !== 'string') {
+            throw new Error('Must be called on instance field');
+        }
+
+        // Set which member is the id
+        const metadata = metadataManager().metadataFor(target);
+        metadata.idMember = property;
+
+        // Setup transformations if passed
+        opts = opts || {};
+        if (typeof opts.type === 'string') {
+            metadata.idType = <any>opts.type.toLowerCase();
+        }
+    };
+}

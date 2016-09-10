@@ -2,8 +2,8 @@ import {IMongoConfiguration} from './settings';
 import {MongoClient} from 'mongodb';
 import MongoConnection from './connection';
 import validate from './settings';
-import {ILogger} from '../../../utils/logger';
-
+import {ILogger} from '../util/default-logger';
+import logger from '../util/default-logger';
 
 let connection: MongoConnection = null;
 let log: ILogger = null;
@@ -29,12 +29,16 @@ export async function connect(config: IMongoConfiguration): Promise<MongoConnect
     }
 }
 
-export function get(): MongoConnection {
+export function getConnection(): MongoConnection {
     if (!connection) {
         throw new Error('Mongo connection is not initialized yet!');
     }
 
     return connection;
+}
+
+export function  getLogger(): ILogger {
+    return log || logger();
 }
 
 export async function disconnect(): Promise<void> {

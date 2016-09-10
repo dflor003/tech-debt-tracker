@@ -1,66 +1,82 @@
+import metadataManager from './metadata-manager';
+import {IMongoTypeMetadata} from './metadata-manager';
+import {Collection} from 'mongodb';
+import {getConnection, getLogger} from '../connection/connect';
+import {ILogger} from '../util/default-logger';
 
 
-export default class Repository<TModel> {
-    private collectionName: string;
-    private fromDocumentFunc: (doc: any) => TModel;
+export default class Repository<TModel, TDocument> {
+    private log: ILogger;
+    private metadata: IMongoTypeMetadata<TModel, TDocument>;
     private transformIdFunc: (id: string) => any;
 
     constructor(type: Function) {
-        this.collectionName = type['collectionName'] || type['name'];
-        this.fromDocumentFunc = type['fromDocument'];
-        this.transformIdFunc = type['transformId'] || (id => id);
-
-        if (typeof this.fromDocumentFunc !== 'function') {
-            throw new Error('Repository type constructor is missing the fromDocument function');
+        if (typeof type !== 'function') {
+            throw new Error('Type must be a valid class');
         }
 
-        if (typeof this.collectionName !== 'string') {
-            throw new Error('Could not determine repository collection name from type constructor');
+        this.metadata = metadataManager().metadataFor(type);
+        if (!this.metadata) {
+            throw new Error(`Could not find collection name for '${type.name}'`);
         }
+        this.log = getLogger();
     }
 
-    create(model: TModel): Promise<TModel> {
-        var dfd = Q.defer<TModel>(),
-            document = Repository.toDocument(model);
+    async create(model: TModel): Promise<TModel> {
+        // Transform document
+        const document = this.toDocument(model);
 
-        this.getCollection()
-            .then(collection => {
-                collection.insert(document, (err, result) => {
-                    if (err) dfd.reject(err);
-                    else {
-                        var inserted = result.ops[0];
-                        dfd.resolve(this.createInstance(inserted));
-                    }
-                });
-            })
-            .fail(err => dfd.reject(err));
+        // Do the write
+        const collection = this.getCollection();
+        const writeResult = await collection.insertOne(document);
+        if (!writeResult.insertedCount) {
+            throw new Error(`Failed to do a mongo insert into collection '${collection.collectionName}'`);
+        }
 
-        return dfd.promise;
+        // Transform back to model
+        const insertedDocument = writeResult.ops[0];
+        if (!insertedDocument) {
+            throw new Error(`Inserted document into '${collection.collectionName}' but did not get back result`);
+        }
+        return this.fromDocument(insertedDocument);
     }
 
-    createAll(models: TModel[]): Promise<TModel[]> {
-        var dfd = Q.defer<TModel[]>(),
-            documents = models.map(model => Repository.toDocument(model));
+    async createAll(...models: TModel[]): Promise<TModel[]> {
+        // Error checks
+        if (!models) {
+            throw new Error('Must pass models');
+        }
 
-        this.getCollection()
-            .then(collection =>
-                collection.insert(documents, (err, result) => {
-                    if (err) dfd.reject(err);
-                    else dfd.resolve(result);
-                }))
-            .fail(dfd.reject);
+        if (!models.length) {
+            return [];
+        }
 
-        return dfd.promise;
+        // Transform to documents
+        const documents = models.map(model => this.toDocument(model));
+
+        // Do the writes
+        const collection = this.getCollection();
+        const writeResult = await collection.insertMany(documents);
+        if (writeResult.insertedCount !== models.length) {
+            throw new Error(`One or more insert operations failed for collection '${collection.collectionName}'. Expected ${models.length} but got ${writeResult.insertedCount}`);
+        }
+
+        // Transform back to models
+        const insertedDocuments = writeResult.ops || [];
+        if (!insertedDocuments || insertedDocuments.length !== models.length) {
+            throw new Error(`Inserted document into '${collection.collectionName}' but did not get back result`);
+        }
+        return insertedDocuments.map(doc => this.fromDocument(doc));
     }
 
-    findById(id: string): Promise<TModel> {
+    findById(id: any): Promise<TModel> {
         var dfd = Q.defer<TModel>();
 
         this.getCollection()
             .then(collection =>
                 collection.findOne({ _id: this.transformIdFunc(id) }, (err, result) => {
                     if (err) dfd.reject(err);
-                    else dfd.resolve(!result ? null : this.createInstance(result));
+                    else dfd.resolve(!result ? null : this.fromDocument(result));
                 }))
             .fail(dfd.reject);
 
@@ -74,7 +90,7 @@ export default class Repository<TModel> {
             .then(collection => collection
                 .findOne(query, (err, result) => {
                     if (err) dfd.reject(err);
-                    else dfd.resolve(!result ? null : this.createInstance(result));
+                    else dfd.resolve(!result ? null : this.fromDocument(result));
                 }))
             .fail(dfd.reject);
 
@@ -94,7 +110,7 @@ export default class Repository<TModel> {
                             dfd.resolve(documents);
                         }
                         else {
-                            var results = documents.map(doc => this.createInstance(doc));
+                            var results = documents.map(doc => this.fromDocument(doc));
                             dfd.resolve(results);
                         }
                     }))
@@ -112,7 +128,7 @@ export default class Repository<TModel> {
             .then(collection => collection
                 .save(document, (err, result) => {
                     if (err) dfd.reject(err);
-                    else dfd.resolve(!result ? null : this.createInstance(result));
+                    else dfd.resolve(!result ? null : this.fromDocument(result));
                 }))
             .fail(dfd.reject);
 
@@ -137,30 +153,23 @@ export default class Repository<TModel> {
         return dfd.promise;
     }
 
-    protected createInstance(document: any): TModel {
-        return this.fromDocumentFunc(document);
+    protected getCollection(): Collection {
+        return getConnection().getCollection(this.metadata.collection);
     }
 
-    protected getCollection(): Promise<Collection> {
-        var dfd = Q.defer<Collection>();
-        MongoConnection.connect()
-            .then(db => dfd.resolve(db.getCollection(this.collectionName)))
-            .fail(err => dfd.reject(err));
+    protected fromDocument(document: TDocument): TModel {
+        if (!document) {
+            throw new Error('Can not convert a null document to instance');
+        }
 
-        return dfd.promise;
+        return this.metadata.fromDocument(document);
     }
 
-    private static toDocument<T extends IEntity>(model: T): any {
+    private toDocument(model: TModel): TDocument {
         if (!model) {
             throw new Error('Can not insert null value');
         }
 
-        if (typeof model['toDocument'] !== 'function') {
-            throw new Error('Model missing toDocument function');
-        }
-
-        return model.toDocument();
+        return this.metadata.toDocument(model);
     }
 }
-
-export = Repository;

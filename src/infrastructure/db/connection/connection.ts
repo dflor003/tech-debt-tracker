@@ -1,5 +1,6 @@
 import {Db, Collection} from 'mongodb';
 import {ILogger} from '../util/default-logger';
+import Repository from '../repo/repository';
 
 export default class MongoConnection {
     private database: Db;
@@ -30,5 +31,13 @@ export default class MongoConnection {
 
     getCollection(name: string): Collection {
         return this.database.collection(name);
+    }
+
+    repositoryFor<TModel, TDocument>(clazz: FunctionConstructor): Repository<TModel, TDocument> {
+        if (!clazz) {
+            throw new Error('No class passed!');
+        }
+
+        return new Repository<TModel, TDocument>(clazz);
     }
 }

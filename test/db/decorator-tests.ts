@@ -1,6 +1,8 @@
+import * as uuid from 'node-uuid';
 import {expect} from 'chai';
-import {Model, FromDocument, ToDocument} from '../../src/infrastructure/db/repo/decorators';
+import {Model, FromDocument, ToDocument, Id} from '../../src/infrastructure/db/repo/decorators';
 import manager from '../../src/infrastructure/db/repo/metadata-manager';
+import {ObjectID} from 'mongodb';
 
 describe('Mongo configuration decorators', () => {
     beforeEach(() => manager().clear());
@@ -118,6 +120,68 @@ describe('Mongo configuration decorators', () => {
                 expect(document.id).to.equal('Foo');
                 expect(document.x).to.equal(42);
                 expect(document.y).to.equal(100);
+            });
+        });
+    });
+
+    describe('@Id', () => {
+        it('should setup which member is the id member in metadata', () => {
+            // Arrange
+            @Model()
+            class Foo {
+                @Id()
+                someIdProp: string;
+            }
+
+            // Act
+            const metadata = manager().metadataFor(Foo);
+
+            // Assert
+            expect(metadata.idMember).to.equal('someIdProp');
+        });
+
+        describe('when passed type of objectid', () => {
+            it('should let you create new object id for type', () => {
+                // Arrange
+                @Model()
+                class Bar {
+                    @Id({ type: 'objectid' })
+                    someIdProp: string;
+
+                    constructor(id) {
+                        this.someIdProp = id;
+                    }
+                }
+
+                // Act
+                const metadata = manager().metadataFor(Bar);
+                const result = metadata.newIdForModel();
+
+                // Assert
+                expect(result).to.be.instanceOf(ObjectID);
+            });
+        });
+
+        describe('when passed type of uuid', () => {
+            it('should let you create new uuid for type', () => {
+                // Arrange
+                @Model()
+                class Bar {
+                    @Id({ type: 'uuid' })
+                    someIdProp: string;
+
+                    constructor(id) {
+                        this.someIdProp = id;
+                    }
+                }
+
+                // Act
+                const metadata = manager().metadataFor(Bar);
+                const result = metadata.newIdForModel();
+
+                // Assert
+                expect(result).to.be.a('string');
+                expect(() => uuid.parse(result)).not.to.throw();
             });
         });
     });
